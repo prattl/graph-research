@@ -3,5 +3,5 @@ project(graphs)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp Graph.cpp Graph.h)
+set(SOURCE_FILES src/main.cpp src/Graph.cpp src/Graph.h)
 add_executable(graphs ${SOURCE_FILES})
