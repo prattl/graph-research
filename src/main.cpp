@@ -15,6 +15,8 @@ int main() {
     g.addVertex("6");
     g.addVertex("7");
     g.addVertex("8");
+    g.addVertex("9");
+    g.addVertex("10");
 
     g.addEdge("1", "2");
     g.addEdge("1", "6");
@@ -23,11 +25,14 @@ int main() {
     g.addEdge("4", "5");
     g.addEdge("6", "7");
     g.addEdge("6", "8");
+    g.addEdge("8", "9");
+    g.addEdge("9", "10");
 
     g.printGraph();
 
     g.traverseDfsRecursive("1");
     g.traverseDfsIterative("1");
+    g.traverseDfsIterativeDeepening("1");
 
     Vertex* v = g.traverseToVertexBfs("1", "5");
 

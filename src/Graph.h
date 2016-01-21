@@ -19,6 +19,7 @@ class Graph
     std::vector<Vertex*> nodes;
     void recursiveDfs(Vertex&);
     void prepareTraverse();
+    void depthLimitedDfs(Vertex&, int);
 public:
     void printGraph();
     void addVertex(std::string);
@@ -28,6 +29,7 @@ public:
     Vertex* traverseToVertexBfs(Vertex &start, Vertex &end);
     void traverseDfsRecursive(std::string);
     void traverseDfsIterative(std::string);
+    void traverseDfsIterativeDeepening(std::string);
 };
 
 

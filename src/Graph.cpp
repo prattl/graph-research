@@ -143,3 +143,27 @@ void Graph::traverseDfsIterative(std::string root) {
     }
 }
 
+void Graph::depthLimitedDfs(Vertex& node, int depth) {
+    node.visited = true;
+    std::cout << node.name << " ";
+    if (depth == 0) {
+        return;
+    } else if (depth > 0) {
+        for (auto const& neighbor: node.neighbors) {
+            if (!neighbor->visited) {
+                depthLimitedDfs(*neighbor, depth - 1);
+            }
+        }
+    }
+}
+
+void Graph::traverseDfsIterativeDeepening(std::string root) {
+    Vertex* root_node = getVertex(root);
+    std::cout << "Iterative Deepening DFS traversal:\n";
+    for (int depth = 0; depth < 8; depth++) {
+        prepareTraverse();
+        std::cout << "Depth " << depth << ": ";
+        depthLimitedDfs(*root_node, depth);
+        std::cout << "\n";
+    }
+}

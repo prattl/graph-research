@@ -7,9 +7,9 @@ and also to re-familiarize with C++ and learn some of the new features in 11 and
   - [x] BFS traversal
   - [x] Recursive DFS traversal
   - [x] Iterative DFS traversal
-  - [ ] Iterative Deepening DFS traversal
+  - [x] Iterative Deepening DFS traversal
 - [ ] Hypergraphs
-  - [ ] BFS traersal
+  - [ ] BFS traversal
   - [ ] DFS traversal
 - [ ] Simple parser with Boost Spirit
 - [ ] Smart pointers
