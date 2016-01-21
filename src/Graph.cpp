@@ -4,6 +4,8 @@
 #include <deque>
 #include <unordered_set>
 #include <limits>
+#include <algorithm>
+#include <stack>
 
 std::ostream& operator<<(std::ostream &strm, const Vertex &v) {
     std::string neighbors;
@@ -55,7 +57,9 @@ Vertex* Graph::traverseToVertexBfs(std::string start, std::string end) {
 }
 
 Vertex* Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
-    // Traverse the graph from start to end, return the end node if it is found.
+    // Traverse the graph from start to end, return the end node if it is found. This will only return the correct
+    // shortest path if the graph is non-cyclical.
+
     // Store the nodes to be visited next, and the nodes already visited
     std::queue<Vertex*> visit_queue;
     std::unordered_set<Vertex*> visited;
@@ -64,13 +68,11 @@ Vertex* Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
     visit_queue.push(&start);
 
     Vertex* current;
-    int num_visit_queue = 0;
 
-    while (!visit_queue.empty() && num_visit_queue < 100) {
-        num_visit_queue++;
+    while (!visit_queue.empty()) {
         current = visit_queue.front();
         visit_queue.pop();
-        if (visited.find(current) == visited.end()) {
+        if (visited.find(current) == visited.end()) { // Make sure we haven't visited this node already
             std::cout << "Visiting vertex: " << current->name << "\n";
             if (current->name == end.name) {
                 return current;
@@ -81,7 +83,8 @@ Vertex* Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
                     std::cout << "\t\tNeighbor " << neighbor->name << " is already in the visited set.\n";
                 } else {
                     std::cout << "\t\tAdding " << neighbor->name << " to the visit queue.\n";
-                    // If it's already in the queue, we'll catch it after we visit it the first time.
+                    // If it's already in the queue, we'll skip it above after we visit it the first time.
+                    neighbor->previous = current;
                     visit_queue.push(neighbor);
                 }
             }
@@ -92,37 +95,51 @@ Vertex* Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
     return NULL;
 }
 
-int Graph::findShortestPath(Vertex &start, Vertex &end) {
-    // Find the shortest path from start to end, returning the length of the path.
-    std::deque<Vertex*> visit_queue;
-
-    for (auto const& vertex: nodes) {
-        vertex->distance = std::numeric_limits<int>::max();
-        vertex->previous = NULL;
-        visit_queue.push_back(vertex);
-    }
-
-    start.distance = 0;
-
-    while (!visit_queue.empty()) {
-        // Find vertex in visit_queue with smallest distance
-        Vertex* closest_node;
-        int smallest_distance = std::numeric_limits<int>::max();
-        for (auto const& vertex: visit_queue) {
-            if (vertex->distance < smallest_distance) {
-                smallest_distance = vertex->distance;
-                closest_node = vertex;
-            }
-        }
-
-        // TODO: Remove closest_node from visit_queue
-//        visit_queue.erase(closest_node);
-
-        // TODO: For each neighbor of closest_node (that is still in visit_queue):
-        // TODO:    Find alternate distance by incrementing closest_node's distance by 1 (since we're not using a weighted graph)
-        // TODO:    If alternate distance < neighbor's distance:
-        // TODO:        Set neighbor's distance to alternate distance
-        // TODO:        Set neighbor's previous to closest_node
-
+void Graph::prepareTraverse() {
+    // Prepare for a new traversal by marking all nodes as unvisited.
+    for (auto const& node: nodes) {
+        node->visited = false;
     }
 }
+
+void Graph::traverseDfsRecursive(std::string root) {
+    prepareTraverse();
+    std::cout << "Recursive DFS traversal:\n";
+    Vertex* root_node = getVertex(root);
+    recursiveDfs(*root_node);
+}
+
+void Graph::recursiveDfs(Vertex &node) {
+    node.visited = true;
+    std::cout << "\tVisiting node " << node.name << "\n";
+    for (auto const& neighbor: node.neighbors) {
+        if (!neighbor->visited) {
+            recursiveDfs(*neighbor);
+        }
+    }
+}
+
+void Graph::traverseDfsIterative(std::string root) {
+    // Results should be the same as recursive DFS except nodes will be visited "right to left"
+    prepareTraverse();
+
+    Vertex* root_node = getVertex(root);
+    Vertex* current_node;
+    std::stack<Vertex*> s;
+
+    s.push(root_node);
+    std::cout << "Iterative DFS traversal:\n";
+
+    while (!s.empty()) {
+        current_node = s.top();
+        s.pop();
+        if (!current_node->visited) {
+            std::cout << "\tVisiting node " << current_node->name << "\n";
+            current_node->visited = true;
+            for (auto const& neighbor: current_node->neighbors) {
+                s.push(neighbor);
+            }
+        }
+    }
+}
+

@@ -5,8 +5,9 @@ and also to re-familiarize with C++ and learn some of the new features in 11 and
 # To Do:
 - [ ] Graphs
   - [x] BFS traversal
-  - [ ] DFS traversal
-  - [ ] Djikstra's  
+  - [x] Recursive DFS traversal
+  - [x] Iterative DFS traversal
+  - [ ] Iterative Deepening DFS traversal
 - [ ] Hypergraphs
   - [ ] BFS traersal
   - [ ] DFS traversal
