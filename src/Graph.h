@@ -11,6 +11,7 @@ public:
     std::vector<Vertex*> neighbors;
     Vertex* previous;  // Used during traversal
     bool visited;
+    ~Vertex();
 };
 
 
