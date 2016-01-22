@@ -34,9 +34,9 @@ int main() {
     g.traverseDfsIterative("1");
     g.traverseDfsIterativeDeepening("1");
 
-    Vertex* v = g.traverseToVertexBfs("1", "5");
+    graphs::smartVertexPtr v = g.traverseToVertexBfs("1", "5");
 
-    stack<Vertex*> shortest_path;
+    stack<graphs::smartVertexPtr> shortest_path;
     cout << "Shortest path: ";
     shortest_path.push(v);
     while (v->previous) {
