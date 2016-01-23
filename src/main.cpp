@@ -1,11 +1,12 @@
 #include <iostream>
 #include "Graph.h"
+#include "Hypergraph.h"
 #include <stack>
 
 using namespace std;
 
 int main() {
-    Graph g;
+    graphs::Graph g;
 
     g.addVertex("1");
     g.addVertex("2");
@@ -53,6 +54,35 @@ int main() {
         }
     }
     cout << endl;
+
+    hypergraphs::HyperGraph hg;
+
+    hg.addVertex("1");
+    hg.addVertex("2");
+    hg.addVertex("3");
+    hg.addVertex("4");
+    hg.addVertex("5");
+    hg.addVertex("6");
+    hg.addVertex("7");
+
+    hg.addEdge("a");
+    hg.addEdge("b");
+    hg.addEdge("c");
+    hg.addEdge("d");
+
+    hg.connectVertexToEdge("1", "a");
+    hg.connectVertexToEdge("2", "a");
+    hg.connectVertexToEdge("7", "a");
+    hg.connectVertexToEdge("2", "b");
+    hg.connectVertexToEdge("3", "b");
+    hg.connectVertexToEdge("4", "b");
+    hg.connectVertexToEdge("3", "c");
+    hg.connectVertexToEdge("4", "c");
+    hg.connectVertexToEdge("5", "c");
+    hg.connectVertexToEdge("5", "d");
+    hg.connectVertexToEdge("6", "d");
+
+    hg.printGraph();
 
     return 0;
 }

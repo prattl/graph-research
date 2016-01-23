@@ -7,13 +7,26 @@
 #include <algorithm>
 #include <stack>
 
-std::ostream& operator<<(std::ostream &strm, const Vertex &v) {
-    std::string neighbors;
-    for (auto const& neighbor: v.neighbors) {
-        neighbors += neighbor->name + ", ";
+using namespace graphs;
+
+void Vertex::addNeighbor(smartVertexPtr vertex) {
+    std::cout << "Adding new neighbor " << vertex->name << " to " << name << "\n";
+    // Adds the vertex as a neighbor of this vertex only if it is not already a neighbor.
+    bool isNeighbor = isNeighborTo(vertex);
+    if (!isNeighbor) {
+        neighbors.push_back(vertex);
     }
-    neighbors = neighbors.substr(0, neighbors.length() - 2);
-    return strm << "Vertex: " << v.name << " (neighbors: " << neighbors << ")";
+    std::cout << "Finished adding new neighbor.\n";
+}
+
+bool Vertex::isNeighborTo(smartVertexPtr vertex) {
+    std::cout << "Checking if new neighbor " << vertex->name << " is a neighbor to " << name << "\n";
+    // Returns whether this vertex sees the passed vertex as a neighbor. Note: Does not check whether the passed
+    // vertex considers this vertex as a neighbor. However it should as long as we are using undirected graphs.
+    std::vector<smartVertexPtr>::iterator found;
+    found = find(neighbors.begin(), neighbors.end(), vertex);
+    std::cout << "Finished checking neighbors.\n";
+    return (found != neighbors.end());
 }
 
 Vertex::~Vertex() {
@@ -29,15 +42,15 @@ void Graph::printGraph() {
 
 void Graph::addVertex(std::string name) {
     // Make sure it doesn't already exist
-    graphs::smartVertexPtr existing_vertex = getVertex(name);
+    smartVertexPtr existing_vertex = getVertex(name);
     if (existing_vertex) {
         throw std::logic_error("Vertex with name " + name + " already exists.");
     }
-    graphs::smartVertexPtr new_vertex(new Vertex(name));
+    smartVertexPtr new_vertex(new Vertex(name));
     nodes.push_back(new_vertex);
 }
 
-graphs::smartVertexPtr Graph::getVertex(std::string name) {
+smartVertexPtr Graph::getVertex(std::string name) {
     for (auto& node: nodes) {
         if (node->name == name) {
             return node;
@@ -47,30 +60,32 @@ graphs::smartVertexPtr Graph::getVertex(std::string name) {
 }
 
 void Graph::addEdge(std::string node1, std::string node2) {
-    graphs::smartVertexPtr v1 = getVertex(node1);
-    graphs::smartVertexPtr v2 = getVertex(node2);
-    v1->neighbors.push_back(v2);
-    v2->neighbors.push_back(v1);
+    std::cout << "Adding edge for " << node1 << " and " << node2 << "\n";
+    smartVertexPtr v1 = getVertex(node1);
+    smartVertexPtr v2 = getVertex(node2);
+    v1->addNeighbor(v2);
+    v2->addNeighbor(v1);
+    std::cout << "Finished adding edge.\n";
 }
 
-graphs::smartVertexPtr Graph::traverseToVertexBfs(std::string start, std::string end) {
-    graphs::smartVertexPtr v1 = getVertex(start);
-    graphs::smartVertexPtr v2 = getVertex(end);
+smartVertexPtr Graph::traverseToVertexBfs(std::string start, std::string end) {
+    smartVertexPtr v1 = getVertex(start);
+    smartVertexPtr v2 = getVertex(end);
     return traverseToVertexBfs(*v1, *v2);
 }
 
-graphs::smartVertexPtr Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
+smartVertexPtr Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
     // Traverse the graph from start to end, return the end node if it is found. This will only return the correct
     // shortest path if the graph is non-cyclical.
 
     // Store the nodes to be visited next, and the nodes already visited
-    std::queue<graphs::smartVertexPtr> visit_queue;
-    std::unordered_set<graphs::smartVertexPtr> visited;
+    std::queue<smartVertexPtr> visit_queue;
+    std::unordered_set<smartVertexPtr> visited;
 
     // Start with the root node
-    visit_queue.push(graphs::smartVertexPtr(&start)); // Copy the smart_ptr
+    visit_queue.push(smartVertexPtr(&start)); // Copy the smart_ptr
 
-    graphs::smartVertexPtr current;
+    smartVertexPtr current;
 
     std::cout << "BFS Traversal:\n";
 
@@ -99,7 +114,7 @@ graphs::smartVertexPtr Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
     std::cout << "Could not traverse from " << start.name << " to " << end.name << ".\n";
     return NULL;
 }
-//
+
 void Graph::prepareTraverse() {
     // Prepare for a new traversal by marking all nodes as unvisited.
     for (auto& node: nodes) {
@@ -110,7 +125,7 @@ void Graph::prepareTraverse() {
 void Graph::traverseDfsRecursive(std::string root) {
     prepareTraverse();
     std::cout << "Recursive DFS traversal:\n";
-    graphs::smartVertexPtr root_node = getVertex(root);
+    smartVertexPtr root_node = getVertex(root);
     recursiveDfs(*root_node);
 }
 
@@ -128,9 +143,9 @@ void Graph::traverseDfsIterative(std::string root) {
     // Results should be the same as recursive DFS except nodes will be visited "right to left"
     prepareTraverse();
 
-    graphs::smartVertexPtr root_node = getVertex(root);
-    graphs::smartVertexPtr current_node;
-    std::stack<graphs::smartVertexPtr> s;
+    smartVertexPtr root_node = getVertex(root);
+    smartVertexPtr current_node;
+    std::stack<smartVertexPtr> s;
 
     s.push(root_node);
     std::cout << "Iterative DFS traversal:\n";
@@ -163,7 +178,7 @@ void Graph::depthLimitedDfs(Vertex& node, int depth) {
 }
 
 void Graph::traverseDfsIterativeDeepening(std::string root) {
-    graphs::smartVertexPtr root_node = getVertex(root);
+    smartVertexPtr root_node = getVertex(root);
     std::cout << "Iterative Deepening DFS traversal:\n";
     for (int depth = 0; depth < 8; depth++) {
         prepareTraverse();
