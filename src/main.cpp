@@ -6,6 +6,7 @@
 using namespace std;
 
 int main() {
+    cout << "================== GRAPHS ==================\n";
     graphs::Graph g;
 
     g.addVertex("1");
@@ -55,6 +56,7 @@ int main() {
     }
     cout << endl;
 
+    cout << "================== HYPERGRAPHS ==================\n";
     hypergraphs::HyperGraph hg;
 
     hg.addVertex("1");
@@ -81,6 +83,12 @@ int main() {
     hg.connectVertexToEdge("5", "c");
     hg.connectVertexToEdge("5", "d");
     hg.connectVertexToEdge("6", "d");
+
+    hg.traverseBfs("1");
+
+    hg.traverseDfsRecursive("3");
+//    hg.traverseDfsIterative("1");
+//    hg.traverseDfsIterativeDeepening("1");
 
     hg.printGraph();
 

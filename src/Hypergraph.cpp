@@ -1,7 +1,7 @@
 #include "Hypergraph.h"
-//#include "Graph.h"
 #include <iostream>
 #include <algorithm>
+#include <queue>
 
 using namespace hypergraphs;
 
@@ -70,4 +70,51 @@ void HyperGraph::connectVertexToEdge(std::string vertex_name, std::string edge_n
     }
 
     edge->addVertex(vertex);
+}
+
+graphs::smartVertexPtr HyperGraph::traverseToVertexBfs(std::string start_name, std::string end_name) {
+    return graphs::Graph::traverseToVertexBfs(start_name, end_name);
+}
+
+
+void HyperGraph::traverseBfs(std::string root_name) {
+    graphs::smartVertexPtr root_node = getVertex(root_name);
+    traverseBfs(root_node);
+}
+
+void HyperGraph::traverseBfs(graphs::smartVertexPtr root) {
+    // Traverse the entire graph until all nodes have been visited.
+    graphs::Graph::prepareTraverse();
+    std::queue<graphs::smartVertexPtr> visit_queue;
+
+    std::cout << "Hypergraph BFS traversal starting from node " << root->name << ":\n";
+
+    visit_queue.push(root);
+    graphs::smartVertexPtr current;
+
+    while (!visit_queue.empty()) {
+        current = visit_queue.front();
+        visit_queue.pop();
+
+        if (!current->visited) {
+            std::cout << "\tVisiting vertex: " << current->name << "\n";
+
+            for (auto& neighbor: current->neighbors) {
+                std::cout << "\t\tLooking at neighbor " << neighbor->name << " of node " << current->name <<".\n";
+                if (neighbor->visited) {
+                    std::cout << "\t\t\tNeighbor " << neighbor->name << " has already been visited.\n";
+                } else {
+                    std::cout << "\t\t\tAdding " << neighbor->name << " to the visit queue.\n";
+                    // If it's already in the queue, we'll skip it above after we visit it the first time.
+                    neighbor->previous = current;
+                    visit_queue.push(neighbor);
+                }
+            }
+            current->visited = true;
+        }
+    }
+}
+
+void HyperGraph::traverseDfsRecursive(std::string root_name) {
+    graphs::Graph::traverseDfsRecursive(root_name);
 }

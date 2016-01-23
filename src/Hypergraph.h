@@ -38,6 +38,10 @@ namespace hypergraphs {
         void addEdge(std::string);
         void connectVertexToEdge(std::string, std::string);
         smartEdgePtr getEdge(std::string);
+        graphs::smartVertexPtr traverseToVertexBfs(std::string start_name, std::string end_name);
+        void traverseBfs(std::string);
+        void traverseBfs(graphs::smartVertexPtr);
+        void traverseDfsRecursive(std::string);
     };
 
 }

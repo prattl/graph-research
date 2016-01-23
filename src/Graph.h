@@ -42,7 +42,6 @@ namespace graphs {
 
         void recursiveDfs(Vertex &);
 
-        void prepareTraverse();
 
         void depthLimitedDfs(Vertex &, int);
 
@@ -53,13 +52,15 @@ namespace graphs {
 
         smartVertexPtr getVertex(std::string);
 
+        void prepareTraverse();
+
         void addEdge(std::string, std::string);
 
-        smartVertexPtr traverseToVertexBfs(std::string start_name, std::string end_name);
+        virtual smartVertexPtr traverseToVertexBfs(std::string start_name, std::string end_name);
 
         smartVertexPtr traverseToVertexBfs(Vertex &start, Vertex &end);
 
-        void traverseDfsRecursive(std::string);
+        virtual void traverseDfsRecursive(std::string);
 
         void traverseDfsIterative(std::string);
 

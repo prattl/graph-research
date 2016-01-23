@@ -10,22 +10,18 @@
 using namespace graphs;
 
 void Vertex::addNeighbor(smartVertexPtr vertex) {
-    std::cout << "Adding new neighbor " << vertex->name << " to " << name << "\n";
     // Adds the vertex as a neighbor of this vertex only if it is not already a neighbor.
     bool isNeighbor = isNeighborTo(vertex);
     if (!isNeighbor) {
         neighbors.push_back(vertex);
     }
-    std::cout << "Finished adding new neighbor.\n";
 }
 
 bool Vertex::isNeighborTo(smartVertexPtr vertex) {
-    std::cout << "Checking if new neighbor " << vertex->name << " is a neighbor to " << name << "\n";
     // Returns whether this vertex sees the passed vertex as a neighbor. Note: Does not check whether the passed
     // vertex considers this vertex as a neighbor. However it should as long as we are using undirected graphs.
     std::vector<smartVertexPtr>::iterator found;
     found = find(neighbors.begin(), neighbors.end(), vertex);
-    std::cout << "Finished checking neighbors.\n";
     return (found != neighbors.end());
 }
 
@@ -60,12 +56,10 @@ smartVertexPtr Graph::getVertex(std::string name) {
 }
 
 void Graph::addEdge(std::string node1, std::string node2) {
-    std::cout << "Adding edge for " << node1 << " and " << node2 << "\n";
     smartVertexPtr v1 = getVertex(node1);
     smartVertexPtr v2 = getVertex(node2);
     v1->addNeighbor(v2);
     v2->addNeighbor(v1);
-    std::cout << "Finished adding edge.\n";
 }
 
 smartVertexPtr Graph::traverseToVertexBfs(std::string start, std::string end) {
@@ -87,7 +81,7 @@ smartVertexPtr Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
 
     smartVertexPtr current;
 
-    std::cout << "BFS Traversal:\n";
+    std::cout << "BFS Traversal from node " << start.name << " to " << end.name << ":\n";
 
     while (!visit_queue.empty()) {
         current = visit_queue.front();
@@ -119,12 +113,13 @@ void Graph::prepareTraverse() {
     // Prepare for a new traversal by marking all nodes as unvisited.
     for (auto& node: nodes) {
         node->visited = false;
+        node->previous = nullptr;
     }
 }
 
 void Graph::traverseDfsRecursive(std::string root) {
     prepareTraverse();
-    std::cout << "Recursive DFS traversal:\n";
+    std::cout << "Recursive DFS traversal starting from node " << root << ":\n";
     smartVertexPtr root_node = getVertex(root);
     recursiveDfs(*root_node);
 }
@@ -148,7 +143,7 @@ void Graph::traverseDfsIterative(std::string root) {
     std::stack<smartVertexPtr> s;
 
     s.push(root_node);
-    std::cout << "Iterative DFS traversal:\n";
+    std::cout << "Iterative DFS traversal starting from node " << root << ":\n";
 
     while (!s.empty()) {
         current_node = s.top();
@@ -179,7 +174,7 @@ void Graph::depthLimitedDfs(Vertex& node, int depth) {
 
 void Graph::traverseDfsIterativeDeepening(std::string root) {
     smartVertexPtr root_node = getVertex(root);
-    std::cout << "Iterative Deepening DFS traversal:\n";
+    std::cout << "Iterative Deepening DFS traversal starting from node " << root << ":\n";
     for (int depth = 0; depth < 8; depth++) {
         prepareTraverse();
         std::cout << "\tDepth " << depth << ": ";

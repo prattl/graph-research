@@ -11,7 +11,8 @@ and also to re-familiarize with C++ and learn some of the new features introduce
   - [x] Iterative Deepening DFS traversal
 - [ ] Hypergraphs
   - [x] Data structures
-  - [ ] BFS traversal
-  - [ ] DFS traversal
+  - [x] BFS traversal
+  - [x] DFS traversal
+  - [ ] Shortest path
 - [ ] Simple parser (with Boost Spirit?) to construct graphs
 - [x] Smart pointers
