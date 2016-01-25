@@ -28,6 +28,17 @@ void HyperEdge::addVertex(graphs::smartVertexPtr vertex) {
     nodes.push_back(vertex);
 }
 
+namespace hypergraphs {
+    std::ostream &operator<<(std::ostream &strm, const HyperEdge &he) {
+        std::string nodes_str;
+        for (auto const &node: he.nodes) {
+            nodes_str += node->name + ", ";
+        }
+        nodes_str = nodes_str.substr(0, nodes_str.length() - 2);
+        return strm << "Edge: " << he.name << " (nodes: " << nodes_str << ")";
+    }
+}
+
 void HyperGraph::printGraph() {
     graphs::Graph::printGraph();
     for (auto const& edge: edges) {

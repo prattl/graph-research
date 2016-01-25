@@ -1,7 +1,5 @@
 #include "Graph.h"
-#include <stdexcept>
 #include <queue>
-#include <deque>
 #include <unordered_set>
 #include <limits>
 #include <algorithm>
@@ -9,30 +7,11 @@
 
 using namespace graphs;
 
-void Vertex::addNeighbor(smartVertexPtr vertex) {
-    // Adds the vertex as a neighbor of this vertex only if it is not already a neighbor.
-    bool isNeighbor = isNeighborTo(vertex);
-    if (!isNeighbor) {
-        neighbors.push_back(vertex);
-    }
-}
-
-bool Vertex::isNeighborTo(smartVertexPtr vertex) {
-    // Returns whether this vertex sees the passed vertex as a neighbor. Note: Does not check whether the passed
-    // vertex considers this vertex as a neighbor. However it should as long as we are using undirected graphs.
-    std::vector<smartVertexPtr>::iterator found;
-    found = find(neighbors.begin(), neighbors.end(), vertex);
-    return (found != neighbors.end());
-}
-
-Vertex::~Vertex() {
-    std::cout << "Vertex destructor called for node " << name << "\n";
-}
-
 void Graph::printGraph() {
     std::cout << "Graph:\n";
     for (auto const& node: nodes) {
-        std::cout << "\t" << *(node) << "\n";
+        std::cout << "\t";
+        std::cout << *(node) << "\n";
     }
 }
 

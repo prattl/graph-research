@@ -20,14 +20,7 @@ namespace hypergraphs {
         bool isVertexInEdge(const graphs::smartVertexPtr);
         void addVertex(graphs::smartVertexPtr);
 
-        friend std::ostream& operator<<(std::ostream &strm, const HyperEdge &he) {
-            std::string nodes_str;
-            for (auto const& node: he.nodes) {
-                nodes_str += node->name + ", ";
-            }
-            nodes_str = nodes_str.substr(0, nodes_str.length() - 2);
-            return strm << "Edge: " << he.name << " (nodes: " << nodes_str << ")";
-        }
+        friend std::ostream& operator<<(std::ostream &strm, const HyperEdge &he);
     };
 
     class HyperGraph : graphs::Graph {

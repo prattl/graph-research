@@ -4,38 +4,9 @@
 #include <vector>
 #include <iostream>
 #include <memory>
-
+#include "Vertex.h"
 
 namespace graphs {
-    class Vertex;
-
-    // shared_ptr is needed because both Vertex and Graph can maintain ownership of Vertex pointers.
-    typedef std::shared_ptr<Vertex> smartVertexPtr;
-
-    class Vertex {
-    public:
-        std::string name;
-        std::vector<smartVertexPtr> neighbors;
-        smartVertexPtr previous;  // Used during traversal
-        bool visited;
-        void addNeighbor(smartVertexPtr);
-        bool isNeighborTo(smartVertexPtr);
-
-        Vertex() { };
-
-        Vertex(std::string s) : name(s) { };
-
-        ~Vertex();
-        friend std::ostream& operator<<(std::ostream &strm, const Vertex &v) {
-            std::string neighbors;
-            for (auto const& neighbor: v.neighbors) {
-                neighbors += neighbor->name + ", ";
-            }
-            neighbors = neighbors.substr(0, neighbors.length() - 2);
-            return strm << "Vertex: " << v.name << " (neighbors: " << neighbors << ")";
-        }
-    };
-
 
     class Graph {
         std::vector<smartVertexPtr> nodes;
