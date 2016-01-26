@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include <memory>
 #include <queue>
 #include <unordered_set>
 #include <limits>
@@ -17,62 +18,63 @@ void Graph::printGraph() {
 
 void Graph::addVertex(std::string name) {
     // Make sure it doesn't already exist
-    smartVertexPtr existing_vertex = getVertex(name);
+    auto existing_vertex = getVertex(name);
     if (existing_vertex) {
         throw std::logic_error("Vertex with name " + name + " already exists.");
     }
-    smartVertexPtr new_vertex(new Vertex(name));
-    nodes.push_back(new_vertex);
+
+    auto n = std::make_unique<Vertex>();
+
+    nodes.push_back(std::move(n));
 }
 
-smartVertexPtr Graph::getVertex(std::string name) {
+Vertex* Graph::getVertex(std::string name) {
     for (auto& node: nodes) {
         if (node->name == name) {
-            return node;
+            return node.get();
         }
     }
     return nullptr;
 }
 
 void Graph::addEdge(std::string node1, std::string node2) {
-    smartVertexPtr v1 = getVertex(node1);
-    smartVertexPtr v2 = getVertex(node2);
+    auto v1 = getVertex(node1);
+    auto v2 = getVertex(node2);
     v1->addNeighbor(v2);
     v2->addNeighbor(v1);
 }
 
-smartVertexPtr Graph::traverseToVertexBfs(std::string start, std::string end) {
-    smartVertexPtr v1 = getVertex(start);
-    smartVertexPtr v2 = getVertex(end);
+Vertex* Graph::traverseToVertexBfs(std::string start, std::string end) {
+    auto v1 = getVertex(start);
+    auto v2 = getVertex(end);
     return traverseToVertexBfs(*v1, *v2);
 }
 
-smartVertexPtr Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
+Vertex* Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
     // Traverse the graph from start to end, return the end node if it is found. This will only return the correct
     // shortest path if the graph is non-cyclical.
 
     // Store the nodes to be visited next, and the nodes already visited
-    std::queue<smartVertexPtr> visit_queue;
-    std::unordered_set<smartVertexPtr> visited;
+    std::queue<Vertex*> visit_queue;
 
     // Start with the root node
-    visit_queue.push(smartVertexPtr(&start)); // Copy the smart_ptr
+    visit_queue.push(&start);
 
-    smartVertexPtr current;
+    Vertex* current;
 
     std::cout << "BFS Traversal from node " << start.name << " to " << end.name << ":\n";
 
     while (!visit_queue.empty()) {
         current = visit_queue.front();
         visit_queue.pop();
-        if (visited.find(current) == visited.end()) { // Make sure we haven't visited this node already
+        if (current->visited) { // Make sure we haven't visited this node already
             std::cout << "\tVisiting vertex: " << current->name << "\n";
             if (current->name == end.name) {
                 return current;
             }
             for (auto& neighbor: current->neighbors) {
                 std::cout << "\t\tLooking at neighbor " << neighbor->name << " of node " << current->name <<".\n";
-                if (visited.find(neighbor) != visited.end()) {
+                if (neighbor->visited) {
                     std::cout << "\t\t\tNeighbor " << neighbor->name << " is already in the visited set.\n";
                 } else {
                     std::cout << "\t\t\tAdding " << neighbor->name << " to the visit queue.\n";
@@ -81,7 +83,7 @@ smartVertexPtr Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
                     visit_queue.push(neighbor);
                 }
             }
-            visited.insert(current);
+            current->visited = true;
         }
     }
     std::cout << "Could not traverse from " << start.name << " to " << end.name << ".\n";
@@ -99,11 +101,11 @@ void Graph::prepareTraverse() {
 void Graph::traverseDfsRecursive(std::string root) {
     prepareTraverse();
     std::cout << "Recursive DFS traversal starting from node " << root << ":\n";
-    smartVertexPtr root_node = getVertex(root);
+    Vertex* root_node = getVertex(root);
     recursiveDfs(*root_node);
 }
 
-void Graph::recursiveDfs(Vertex &node) {
+void Graph::recursiveDfs(Vertex& node) {
     node.visited = true;
     std::cout << "\tVisiting node " << node.name << "\n";
     for (auto& neighbor: node.neighbors) {
@@ -117,9 +119,9 @@ void Graph::traverseDfsIterative(std::string root) {
     // Results should be the same as recursive DFS except nodes will be visited "right to left"
     prepareTraverse();
 
-    smartVertexPtr root_node = getVertex(root);
-    smartVertexPtr current_node;
-    std::stack<smartVertexPtr> s;
+    Vertex* root_node = getVertex(root);
+    Vertex* current_node;
+    std::stack<Vertex*> s;
 
     s.push(root_node);
     std::cout << "Iterative DFS traversal starting from node " << root << ":\n";
@@ -152,7 +154,7 @@ void Graph::depthLimitedDfs(Vertex& node, int depth) {
 }
 
 void Graph::traverseDfsIterativeDeepening(std::string root) {
-    smartVertexPtr root_node = getVertex(root);
+    auto root_node = getVertex(root);
     std::cout << "Iterative Deepening DFS traversal starting from node " << root << ":\n";
     for (int depth = 0; depth < 8; depth++) {
         prepareTraverse();

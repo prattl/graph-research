@@ -17,7 +17,7 @@ namespace hypergraphs {
 
         std::string name;
         HyperEdge(std::string s) : name(s) {};
-        bool isVertexInEdge(const graphs::smartVertexPtr);
+        bool isVertexInEdge(const graphs::Vertex*);
         void addVertex(graphs::smartVertexPtr);
 
         friend std::ostream& operator<<(std::ostream &strm, const HyperEdge &he);
@@ -30,8 +30,8 @@ namespace hypergraphs {
         void addVertex(std::string);
         void addEdge(std::string);
         void connectVertexToEdge(std::string, std::string);
-        smartEdgePtr getEdge(std::string);
-        graphs::smartVertexPtr traverseToVertexBfs(std::string start_name, std::string end_name);
+        HyperEdge* getEdge(std::string);
+        graphs::Vertex* traverseToVertexBfs(std::string start_name, std::string end_name);
         void traverseBfs(std::string);
         void traverseBfs(graphs::smartVertexPtr);
         void traverseDfsRecursive(std::string);

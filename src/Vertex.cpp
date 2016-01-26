@@ -17,7 +17,7 @@ namespace graphs {
     }
 }
 
-void Vertex::addNeighbor(smartVertexPtr vertex) {
+void Vertex::addNeighbor(Vertex* vertex) {
     // Adds the vertex as a neighbor of this vertex only if it is not already a neighbor.
     bool isNeighbor = isNeighborTo(vertex);
     if (!isNeighbor) {
@@ -25,11 +25,11 @@ void Vertex::addNeighbor(smartVertexPtr vertex) {
     }
 }
 
-bool Vertex::isNeighborTo(smartVertexPtr vertex) {
+bool Vertex::isNeighborTo(Vertex* vertex) {
     // Returns whether this vertex sees the passed vertex as a neighbor. Note: Does not check whether the passed
     // vertex considers this vertex as a neighbor. However it should as long as we are using undirected graphs.
-    std::vector<smartVertexPtr>::iterator found;
-    found = find(neighbors.begin(), neighbors.end(), vertex);
+//    std::vector<Vertex*>::iterator found;
+    auto found = find(neighbors.begin(), neighbors.end(), vertex);
     return (found != neighbors.end());
 }
 

@@ -9,16 +9,16 @@ namespace graphs {
     class Vertex;
 
     // shared_ptr is needed because both Vertex and Graph can maintain ownership of Vertex pointers.
-    typedef std::shared_ptr<Vertex> smartVertexPtr;
+    typedef std::unique_ptr<Vertex> smartVertexPtr;
 
     class Vertex {
     public:
         std::string name;
-        std::vector<smartVertexPtr> neighbors;
-        smartVertexPtr previous;  // Used during traversal
+        std::vector<Vertex*> neighbors;
+        Vertex* previous;  // Used during traversal
         bool visited;
-        void addNeighbor(smartVertexPtr);
-        bool isNeighborTo(smartVertexPtr);
+        void addNeighbor(Vertex*);
+        bool isNeighborTo(Vertex*);
 
         Vertex() { };
 

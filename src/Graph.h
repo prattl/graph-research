@@ -11,25 +11,24 @@ namespace graphs {
     class Graph {
         std::vector<smartVertexPtr> nodes;
 
-        void recursiveDfs(Vertex &);
+        void recursiveDfs(Vertex&);
 
-
-        void depthLimitedDfs(Vertex &, int);
+        void depthLimitedDfs(Vertex&, int);
 
     public:
         virtual void printGraph();
 
         virtual void addVertex(std::string);
 
-        smartVertexPtr getVertex(std::string);
+        Vertex* getVertex(std::string);
 
         void prepareTraverse();
 
         void addEdge(std::string, std::string);
 
-        virtual smartVertexPtr traverseToVertexBfs(std::string start_name, std::string end_name);
+        virtual Vertex* traverseToVertexBfs(std::string, std::string);
 
-        smartVertexPtr traverseToVertexBfs(Vertex &start, Vertex &end);
+        Vertex* traverseToVertexBfs(Vertex&, Vertex&);
 
         virtual void traverseDfsRecursive(std::string);
 

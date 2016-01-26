@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Graph.h"
-#include "Hypergraph.h"
+//#include "Hypergraph.h"
 #include <stack>
 
 using namespace std;
@@ -36,61 +36,61 @@ int main() {
     g.traverseDfsIterative("1");
     g.traverseDfsIterativeDeepening("1");
 
-    graphs::smartVertexPtr v = g.traverseToVertexBfs("1", "5");
+    graphs::Vertex* v = g.traverseToVertexBfs("1", "5");
 
-    stack<graphs::smartVertexPtr> shortest_path;
-    cout << "Shortest path: ";
-    shortest_path.push(v);
-    while (v->previous) {
-        v = v->previous;
-        shortest_path.push(v);
-    }
-    while (!shortest_path.empty()) {
-        v = shortest_path.top();
-        shortest_path.pop();
-
-        cout << v->name;
-        if (!shortest_path.empty()) {
-            cout << " --> ";
-        }
-    }
-    cout << endl;
+//    stack<graphs::smartVertexPtr> shortest_path;
+//    cout << "Shortest path: ";
+//    shortest_path.push(v);
+//    while (v->previous) {
+//        v = v->previous;
+//        shortest_path.push(v);
+//    }
+//    while (!shortest_path.empty()) {
+//        v = shortest_path.top();
+//        shortest_path.pop();
+//
+//        cout << v->name;
+//        if (!shortest_path.empty()) {
+//            cout << " --> ";
+//        }
+//    }
+//    cout << endl;
 
     cout << "================== HYPERGRAPHS ==================\n";
-    hypergraphs::HyperGraph hg;
-
-    hg.addVertex("1");
-    hg.addVertex("2");
-    hg.addVertex("3");
-    hg.addVertex("4");
-    hg.addVertex("5");
-    hg.addVertex("6");
-    hg.addVertex("7");
-
-    hg.addEdge("a");
-    hg.addEdge("b");
-    hg.addEdge("c");
-    hg.addEdge("d");
-
-    hg.connectVertexToEdge("1", "a");
-    hg.connectVertexToEdge("2", "a");
-    hg.connectVertexToEdge("7", "a");
-    hg.connectVertexToEdge("2", "b");
-    hg.connectVertexToEdge("3", "b");
-    hg.connectVertexToEdge("4", "b");
-    hg.connectVertexToEdge("3", "c");
-    hg.connectVertexToEdge("4", "c");
-    hg.connectVertexToEdge("5", "c");
-    hg.connectVertexToEdge("5", "d");
-    hg.connectVertexToEdge("6", "d");
-
-    hg.traverseBfs("1");
-
-    hg.traverseDfsRecursive("3");
-//    hg.traverseDfsIterative("1");
-//    hg.traverseDfsIterativeDeepening("1");
-
-    hg.printGraph();
+//    hypergraphs::HyperGraph hg;
+//
+//    hg.addVertex("1");
+//    hg.addVertex("2");
+//    hg.addVertex("3");
+//    hg.addVertex("4");
+//    hg.addVertex("5");
+//    hg.addVertex("6");
+//    hg.addVertex("7");
+//
+//    hg.addEdge("a");
+//    hg.addEdge("b");
+//    hg.addEdge("c");
+//    hg.addEdge("d");
+//
+//    hg.connectVertexToEdge("1", "a");
+//    hg.connectVertexToEdge("2", "a");
+//    hg.connectVertexToEdge("7", "a");
+//    hg.connectVertexToEdge("2", "b");
+//    hg.connectVertexToEdge("3", "b");
+//    hg.connectVertexToEdge("4", "b");
+//    hg.connectVertexToEdge("3", "c");
+//    hg.connectVertexToEdge("4", "c");
+//    hg.connectVertexToEdge("5", "c");
+//    hg.connectVertexToEdge("5", "d");
+//    hg.connectVertexToEdge("6", "d");
+//
+//    hg.traverseBfs("1");
+//
+//    hg.traverseDfsRecursive("3");
+////    hg.traverseDfsIterative("1");
+////    hg.traverseDfsIterativeDeepening("1");
+//
+//    hg.printGraph();
 
     return 0;
 }
