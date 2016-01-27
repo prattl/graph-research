@@ -20,6 +20,19 @@ int main() {
     g.addVertex("9");
     g.addVertex("10");
 
+    graphs::Vertex* v1 = g.getVertex("1");
+    graphs::Vertex* v2 = g.getVertex("2");
+
+//    v1->addNeighbor(v2);
+//    v2->addNeighbor(v1);
+//    cout << "Vertex: " << *v1 << "\n";
+
+    for (auto const& n: v1->neighbors) {
+//        std::cout << "\tType of n: " << typeid(n).name() << '\n';
+//        std::cout << "\tType of *(n): " << typeid(*(n)).name() << '\n';
+//        cout << "Neighbor: " << (*n) << "\n";
+    }
+
     g.addEdge("1", "2");
     g.addEdge("1", "6");
     g.addEdge("2", "3");
@@ -29,14 +42,17 @@ int main() {
     g.addEdge("6", "8");
     g.addEdge("8", "9");
     g.addEdge("9", "10");
+//
+//    cout << "Added all edges\n";
+
 
     g.printGraph();
-
-    g.traverseDfsRecursive("1");
-    g.traverseDfsIterative("1");
-    g.traverseDfsIterativeDeepening("1");
-
-    graphs::Vertex* v = g.traverseToVertexBfs("1", "5");
+//
+//    g.traverseDfsRecursive("1");
+//    g.traverseDfsIterative("1");
+//    g.traverseDfsIterativeDeepening("1");
+//
+//    graphs::Vertex* v = g.traverseToVertexBfs("1", "5");
 
 //    stack<graphs::smartVertexPtr> shortest_path;
 //    cout << "Shortest path: ";
@@ -56,7 +72,7 @@ int main() {
 //    }
 //    cout << endl;
 
-    cout << "================== HYPERGRAPHS ==================\n";
+//    cout << "================== HYPERGRAPHS ==================\n";
 //    hypergraphs::HyperGraph hg;
 //
 //    hg.addVertex("1");

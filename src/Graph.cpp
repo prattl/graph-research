@@ -5,8 +5,13 @@
 #include <limits>
 #include <algorithm>
 #include <stack>
+#include <typeinfo>
 
 using namespace graphs;
+
+Graph::~Graph() {
+    std::cout << "Graph destructor called" << "\n";
+}
 
 void Graph::printGraph() {
     std::cout << "Graph:\n";
@@ -18,12 +23,12 @@ void Graph::printGraph() {
 
 void Graph::addVertex(std::string name) {
     // Make sure it doesn't already exist
-    auto existing_vertex = getVertex(name);
-    if (existing_vertex) {
-        throw std::logic_error("Vertex with name " + name + " already exists.");
-    }
+//    auto existing_vertex = getVertex(name);
+//    if (existing_vertex) {
+//        throw std::logic_error("Vertex with name " + name + " already exists.");
+//    }
 
-    auto n = std::make_unique<Vertex>();
+    auto n = std::make_unique<Vertex>(name);
 
     nodes.push_back(std::move(n));
 }
@@ -40,8 +45,8 @@ Vertex* Graph::getVertex(std::string name) {
 void Graph::addEdge(std::string node1, std::string node2) {
     auto v1 = getVertex(node1);
     auto v2 = getVertex(node2);
-    v1->addNeighbor(v2);
-    v2->addNeighbor(v1);
+    v1->addNeighbor(*v2);
+    v2->addNeighbor(*v1);
 }
 
 Vertex* Graph::traverseToVertexBfs(std::string start, std::string end) {
