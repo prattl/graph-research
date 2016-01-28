@@ -17,16 +17,16 @@ namespace graphs {
 
     public:
         ~Graph();
-        virtual void printGraph();
-        virtual void addVertex(std::string);
-        Vertex* getVertex(std::string);
+        virtual void printGraph() const;
+        virtual void addVertex(const std::string);
+        Vertex* getVertex(const std::string);
         void prepareTraverse();
-        void addEdge(std::string, std::string);
-        virtual Vertex* traverseToVertexBfs(std::string, std::string);
-        Vertex* traverseToVertexBfs(Vertex&, Vertex&);
-        virtual void traverseDfsRecursive(std::string);
-        void traverseDfsIterative(std::string);
-        void traverseDfsIterativeDeepening(std::string);
+        void addEdge(const std::string, const std::string);
+        virtual Vertex* traverseToVertexBfs(const std::string, const std::string);
+        Vertex* traverseToVertexBfs(Vertex&, const Vertex&);
+        virtual void traverseDfsRecursive(const std::string);
+        void traverseDfsIterative(const std::string);
+        void traverseDfsIterativeDeepening(const std::string);
     };
 }
 

@@ -15,7 +15,7 @@ struct Vertex::VertexData {
 namespace graphs {
     std::ostream &operator<<(std::ostream &strm, const Vertex &v) {
         std::string neighbors;
-        for (auto const &neighbor: v.neighbors) {
+        for (auto const& neighbor: v.neighbors) {
             neighbors += neighbor->data->label + ", ";
         }
         neighbors = neighbors.substr(0, neighbors.length() - 2);
@@ -60,7 +60,7 @@ bool Vertex::isVisited() {
     return data->visited;
 }
 
-std::string Vertex::getLabel() {
+std::string Vertex::getLabel() const {
     return data->label;
 }
 
@@ -76,10 +76,8 @@ void Vertex::addNeighbor(Vertex& vertex) {
 bool Vertex::isNeighborTo(const Vertex& vertex) {
     // Returns whether this vertex sees the passed vertex as a neighbor. Note: Does not check whether the passed
     // vertex considers this vertex as a neighbor. However it should as long as we are using undirected graphs.
-//    std::vector<Vertex*>::iterator found;
     std::cout << "Checking if vertex " << vertex.data->label << " is neighbor to " << data->label << "\n";
     for (auto const& neighbor: neighbors) {
-//        std::cout << "Loop\n";
         if (neighbor->data->label == vertex.data->label) {
             std::cout << "Returning true\n";
             return true;
@@ -87,8 +85,4 @@ bool Vertex::isNeighborTo(const Vertex& vertex) {
     }
     std::cout << "Returning false\n";
     return false;
-//    auto found = find(neighbors.begin(), neighbors.end(), vertex);
-//    bool isFound = found != neighbors.end();
-//    std::cout << "isFound: " << isFound << "\n";
-//    return (found != neighbors.end());
 }

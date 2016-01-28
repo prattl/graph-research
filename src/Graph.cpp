@@ -13,7 +13,7 @@ Graph::~Graph() {
     std::cout << "Graph destructor called" << "\n";
 }
 
-void Graph::printGraph() {
+void Graph::printGraph() const {
     std::cout << "Graph:\n";
     for (auto const& node: nodes) {
         std::cout << "\t";
@@ -21,13 +21,13 @@ void Graph::printGraph() {
     }
 }
 
-void Graph::addVertex(std::string label) {
+void Graph::addVertex(const std::string label) {
     auto n = std::make_unique<Vertex>(label);
     nodes.push_back(std::move(n));
 }
 
-Vertex* Graph::getVertex(std::string label) {
-    for (auto& node: nodes) {
+Vertex* Graph::getVertex(const std::string label) {
+    for (auto const& node: nodes) {
         if (node->getLabel() == label) {
             return node.get();
         }
@@ -35,20 +35,20 @@ Vertex* Graph::getVertex(std::string label) {
     return nullptr;
 }
 
-void Graph::addEdge(std::string node1, std::string node2) {
+void Graph::addEdge(const std::string node1, const std::string node2) {
     auto v1 = getVertex(node1);
     auto v2 = getVertex(node2);
     v1->addNeighbor(*v2);
     v2->addNeighbor(*v1);
 }
 
-Vertex* Graph::traverseToVertexBfs(std::string start, std::string end) {
+Vertex* Graph::traverseToVertexBfs(const std::string start, const std::string end) {
     auto v1 = getVertex(start);
     auto v2 = getVertex(end);
     return traverseToVertexBfs(*v1, *v2);
 }
 
-Vertex* Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
+Vertex* Graph::traverseToVertexBfs(Vertex &start, const Vertex& end) {
     // Traverse the graph from start to end, return the end node if it is found. This will only return the correct
     // shortest path if the graph is non-cyclical.
     prepareTraverse();
@@ -98,7 +98,7 @@ void Graph::prepareTraverse() {
     }
 }
 
-void Graph::traverseDfsRecursive(std::string root) {
+void Graph::traverseDfsRecursive(const std::string root) {
     prepareTraverse();
     std::cout << "Recursive DFS traversal starting from node " << root << ":\n";
     Vertex* root_node = getVertex(root);
@@ -115,7 +115,7 @@ void Graph::recursiveDfs(Vertex& node) {
     }
 }
 
-void Graph::traverseDfsIterative(std::string root) {
+void Graph::traverseDfsIterative(const std::string root) {
     // Results should be the same as recursive DFS except nodes will be visited "right to left"
     prepareTraverse();
 
@@ -153,7 +153,7 @@ void Graph::depthLimitedDfs(Vertex& node, int depth) {
     }
 }
 
-void Graph::traverseDfsIterativeDeepening(std::string root) {
+void Graph::traverseDfsIterativeDeepening(const std::string root) {
     auto root_node = getVertex(root);
     std::cout << "Iterative Deepening DFS traversal starting from node " << root << ":\n";
     for (int depth = 0; depth < 8; depth++) {

@@ -17,7 +17,7 @@ namespace graphs {
         void unVisit();
         bool isVisited();
 
-        std::string getLabel();
+        std::string getLabel() const;
         void addNeighbor(Vertex&);
         bool isNeighborTo(const Vertex&);
 
