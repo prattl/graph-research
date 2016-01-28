@@ -10,20 +10,21 @@ namespace graphs {
         struct VertexData;
         std::unique_ptr<VertexData> data;
     public:
-        std::string name;
         std::vector<Vertex*> neighbors;
         Vertex* previous;  // Used during traversal
 
-        bool visited;
+        void visit();
+        void unVisit();
+        bool isVisited();
+
+        std::string getLabel();
         void addNeighbor(Vertex&);
-        bool isNeighborTo(Vertex const&);
+        bool isNeighborTo(const Vertex&);
 
-//        Vertex();
-        Vertex(std::string s);
+        Vertex(const std::string);
         ~Vertex();
-
-//        Vertex(const Vertex& rhs);
-//        Vertex& operator=(const Vertex& rhs);
+        Vertex(const Vertex&);
+        Vertex& operator=(const Vertex&);
 
         friend std::ostream& operator<<(std::ostream&, const Vertex&);
     };

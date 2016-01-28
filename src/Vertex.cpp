@@ -6,34 +6,63 @@
 
 using namespace graphs;
 
+struct Vertex::VertexData {
+    std::string uuid;
+    std::string label;
+    bool visited;
+};
+
 namespace graphs {
     std::ostream &operator<<(std::ostream &strm, const Vertex &v) {
         std::string neighbors;
         for (auto const &neighbor: v.neighbors) {
-            neighbors += neighbor->name + ", ";
+            neighbors += neighbor->data->label + ", ";
         }
         neighbors = neighbors.substr(0, neighbors.length() - 2);
-        return strm << "Vertex: " << v.name << " (neighbors: " << neighbors << ")";
+        return strm << "Vertex: " << v.data->label << " (neighbors: " << neighbors << ")";
     }
 }
 
-struct Vertex::VertexData {
-    std::string uuid;
-    std::string label;
-};
-
-//Vertex::Vertex() {
-//    auto newData = VertexData{"", "", 0};
-//    data = std::make_unique<VertexData>(std::move(newData));
-//};
-
-Vertex::Vertex(std::string s) {
-    name = s;
+Vertex::Vertex(const std::string s) {
     auto newData = VertexData{"", s};
     data = std::make_unique<VertexData>(std::move(newData));
 };
 
 Vertex::~Vertex() = default;
+
+// Not used yet but this is how it would be implemented
+Vertex::Vertex(const Vertex& rhs) : data(nullptr) {
+    std::cout << "Copy constructor called for " << data->label << " with rhs " << rhs.data->label << "\n";
+    if (rhs.data) {
+        data = std::make_unique<VertexData>(*rhs.data);
+    }
+}
+
+// Not used yet but this is how it would be implemented
+Vertex& Vertex::operator=(const Vertex& rhs) {
+    std::cout << "Assignment operator called for " << data->label << " with rhs " << rhs.data->label << "\n";
+    if (rhs.data) data.reset();
+    else if (!data) data = std::make_unique<VertexData>(*rhs.data);
+    else *data = *rhs.data;
+
+    return *this;
+}
+
+void Vertex::visit() {
+    data->visited = true;
+}
+
+void Vertex::unVisit() {
+    data->visited = false;
+}
+
+bool Vertex::isVisited() {
+    return data->visited;
+}
+
+std::string Vertex::getLabel() {
+    return data->label;
+}
 
 void Vertex::addNeighbor(Vertex& vertex) {
     // Adds the vertex as a neighbor of this vertex only if it is not already a neighbor.
@@ -44,14 +73,14 @@ void Vertex::addNeighbor(Vertex& vertex) {
     }
 }
 
-bool Vertex::isNeighborTo(Vertex const& vertex) {
+bool Vertex::isNeighborTo(const Vertex& vertex) {
     // Returns whether this vertex sees the passed vertex as a neighbor. Note: Does not check whether the passed
     // vertex considers this vertex as a neighbor. However it should as long as we are using undirected graphs.
 //    std::vector<Vertex*>::iterator found;
-    std::cout << "Checking if vertex " << vertex.name << " is neighbor to " << name << "\n";
+    std::cout << "Checking if vertex " << vertex.data->label << " is neighbor to " << data->label << "\n";
     for (auto const& neighbor: neighbors) {
 //        std::cout << "Loop\n";
-        if (neighbor->name == vertex.name) {
+        if (neighbor->data->label == vertex.data->label) {
             std::cout << "Returning true\n";
             return true;
         }

@@ -21,21 +21,14 @@ void Graph::printGraph() {
     }
 }
 
-void Graph::addVertex(std::string name) {
-    // Make sure it doesn't already exist
-//    auto existing_vertex = getVertex(name);
-//    if (existing_vertex) {
-//        throw std::logic_error("Vertex with name " + name + " already exists.");
-//    }
-
-    auto n = std::make_unique<Vertex>(name);
-
+void Graph::addVertex(std::string label) {
+    auto n = std::make_unique<Vertex>(label);
     nodes.push_back(std::move(n));
 }
 
-Vertex* Graph::getVertex(std::string name) {
+Vertex* Graph::getVertex(std::string label) {
     for (auto& node: nodes) {
-        if (node->name == name) {
+        if (node->getLabel() == label) {
             return node.get();
         }
     }
@@ -58,6 +51,7 @@ Vertex* Graph::traverseToVertexBfs(std::string start, std::string end) {
 Vertex* Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
     // Traverse the graph from start to end, return the end node if it is found. This will only return the correct
     // shortest path if the graph is non-cyclical.
+    prepareTraverse();
 
     // Store the nodes to be visited next, and the nodes already visited
     std::queue<Vertex*> visit_queue;
@@ -67,38 +61,39 @@ Vertex* Graph::traverseToVertexBfs(Vertex &start, Vertex &end) {
 
     Vertex* current;
 
-    std::cout << "BFS Traversal from node " << start.name << " to " << end.name << ":\n";
+    std::cout << "BFS Traversal from node " << start.getLabel() << " to " << end.getLabel() << ":\n";
 
     while (!visit_queue.empty()) {
         current = visit_queue.front();
         visit_queue.pop();
-        if (current->visited) { // Make sure we haven't visited this node already
-            std::cout << "\tVisiting vertex: " << current->name << "\n";
-            if (current->name == end.name) {
+        if (!current->isVisited()) { // Make sure we haven't visited this node already
+            std::cout << "\tVisiting vertex: " << current->getLabel() << "\n";
+            if (current->getLabel() == end.getLabel()) {
                 return current;
             }
             for (auto& neighbor: current->neighbors) {
-                std::cout << "\t\tLooking at neighbor " << neighbor->name << " of node " << current->name <<".\n";
-                if (neighbor->visited) {
-                    std::cout << "\t\t\tNeighbor " << neighbor->name << " is already in the visited set.\n";
+                std::cout << "\t\tLooking at neighbor " << neighbor->getLabel() << " of node " << current->getLabel() <<".\n";
+                if (neighbor->isVisited()) {
+                    std::cout << "\t\t\tNeighbor " << neighbor->getLabel() << " is already in the visited set.\n";
                 } else {
-                    std::cout << "\t\t\tAdding " << neighbor->name << " to the visit queue.\n";
+                    std::cout << "\t\t\tAdding " << neighbor->getLabel() << " to the visit queue.\n";
                     // If it's already in the queue, we'll skip it above after we visit it the first time.
                     neighbor->previous = current;
                     visit_queue.push(neighbor);
                 }
             }
-            current->visited = true;
+            current->visit();
         }
     }
-    std::cout << "Could not traverse from " << start.name << " to " << end.name << ".\n";
+    std::cout << "Could not traverse from " << start.getLabel() << " to " << end.getLabel() << ".\n";
     return NULL;
 }
 
 void Graph::prepareTraverse() {
     // Prepare for a new traversal by marking all nodes as unvisited.
+    std::cout << "Preparing for traversal\n";
     for (auto& node: nodes) {
-        node->visited = false;
+        node->unVisit();
         node->previous = nullptr;
     }
 }
@@ -111,10 +106,10 @@ void Graph::traverseDfsRecursive(std::string root) {
 }
 
 void Graph::recursiveDfs(Vertex& node) {
-    node.visited = true;
-    std::cout << "\tVisiting node " << node.name << "\n";
+    node.visit();
+    std::cout << "\tVisiting node " << node.getLabel() << "\n";
     for (auto& neighbor: node.neighbors) {
-        if (!neighbor->visited) {
+        if (!neighbor->isVisited()) {
             recursiveDfs(*neighbor);
         }
     }
@@ -134,10 +129,10 @@ void Graph::traverseDfsIterative(std::string root) {
     while (!s.empty()) {
         current_node = s.top();
         s.pop();
-        if (!current_node->visited) {
-            std::cout << "\tVisiting node " << current_node->name << "\n";
-            current_node->visited = true;
-            for (auto& neighbor: current_node->neighbors) {
+        if (!current_node->isVisited()) {
+            std::cout << "\tVisiting node " << current_node->getLabel() << "\n";
+            current_node->visit();
+            for (auto const& neighbor: current_node->neighbors) {
                 s.push(neighbor);
             }
         }
@@ -145,13 +140,13 @@ void Graph::traverseDfsIterative(std::string root) {
 }
 
 void Graph::depthLimitedDfs(Vertex& node, int depth) {
-    node.visited = true;
-    std::cout << node.name << " ";
+    node.visit();
+    std::cout << node.getLabel() << " ";
     if (depth == 0) {
         return;
     } else if (depth > 0) {
         for (auto& neighbor: node.neighbors) {
-            if (!neighbor->visited) {
+            if (!neighbor->isVisited()) {
                 depthLimitedDfs(*neighbor, depth - 1);
             }
         }
