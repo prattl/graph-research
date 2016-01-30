@@ -15,7 +15,7 @@ struct Vertex::VertexData {
 namespace graphs {
     std::ostream &operator<<(std::ostream &strm, const Vertex &v) {
         std::string neighbors;
-        for (auto const& neighbor: v.neighbors) {
+        for (auto const& neighbor: v.getNeighbors()) {
             neighbors += neighbor->data->label + ", ";
         }
         neighbors = neighbors.substr(0, neighbors.length() - 2);
@@ -48,15 +48,15 @@ Vertex& Vertex::operator=(const Vertex& rhs) {
     return *this;
 }
 
-void Vertex::visit() {
+void Vertex::visit() const {
     data->visited = true;
 }
 
-void Vertex::unVisit() {
+void Vertex::unVisit() const {
     data->visited = false;
 }
 
-bool Vertex::isVisited() {
+bool Vertex::isVisited() const {
     return data->visited;
 }
 
@@ -66,23 +66,33 @@ std::string Vertex::getLabel() const {
 
 void Vertex::addNeighbor(Vertex& vertex) {
     // Adds the vertex as a neighbor of this vertex only if it is not already a neighbor.
-    bool isNeighbor = isNeighborTo(vertex);
-    std::cout << "Is neighbor: " << isNeighbor << "\n";
-    if (!isNeighbor) {
-        neighbors.push_back(&vertex);
-    }
+//    bool isNeighbor = isNeighborTo(vertex);
+//    std::cout << "Is neighbor: " << isNeighbor << "\n";
+//    if (!isNeighbor) {
+//        neighbors.push_back(&vertex);
+//    }
+    auto newEdge = std::make_unique<Edge>((*this), vertex);
+    edges.push_back(std::move(newEdge));
 }
 
 bool Vertex::isNeighborTo(const Vertex& vertex) {
     // Returns whether this vertex sees the passed vertex as a neighbor. Note: Does not check whether the passed
     // vertex considers this vertex as a neighbor. However it should as long as we are using undirected graphs.
     std::cout << "Checking if vertex " << vertex.data->label << " is neighbor to " << data->label << "\n";
-    for (auto const& neighbor: neighbors) {
-        if (neighbor->data->label == vertex.data->label) {
+    for (auto const& edge: edges) {
+        if (edge->nodes.second->data->label == vertex.data->label) {
             std::cout << "Returning true\n";
             return true;
         }
     }
     std::cout << "Returning false\n";
     return false;
+}
+
+std::vector<Vertex*> Vertex::getNeighbors() const {
+    std::vector<Vertex*> neighbors;
+    for (auto const& edge: edges) {
+        neighbors.push_back(edge->nodes.second);
+    }
+    return neighbors; // This should be fast because of return value optimization
 }

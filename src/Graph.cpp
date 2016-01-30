@@ -26,8 +26,8 @@ void Graph::addVertex(const std::string label) {
     nodes.push_back(std::move(n));
 }
 
-Vertex* Graph::getVertex(const std::string label) {
-    for (auto const& node: nodes) {
+Vertex* Graph::getVertex(const std::string label) const {
+    for (const auto& node: nodes) {
         if (node->getLabel() == label) {
             return node.get();
         }
@@ -35,11 +35,11 @@ Vertex* Graph::getVertex(const std::string label) {
     return nullptr;
 }
 
-void Graph::addEdge(const std::string node1, const std::string node2) {
-    auto v1 = getVertex(node1);
-    auto v2 = getVertex(node2);
-    v1->addNeighbor(*v2);
-    v2->addNeighbor(*v1);
+void Graph::addEdge(const std::string source, const std::string dest) const {
+    auto source_vertex = getVertex(source);
+    auto dest_vertex = getVertex(dest);
+    source_vertex->addNeighbor(*dest_vertex);
+//    v2->addNeighbor(*v1);
 }
 
 Vertex* Graph::traverseToVertexBfs(const std::string start, const std::string end) {
@@ -59,19 +59,18 @@ Vertex* Graph::traverseToVertexBfs(Vertex &start, const Vertex& end) {
     // Start with the root node
     visit_queue.push(&start);
 
-    Vertex* current;
-
     std::cout << "BFS Traversal from node " << start.getLabel() << " to " << end.getLabel() << ":\n";
 
     while (!visit_queue.empty()) {
-        current = visit_queue.front();
+        auto current = visit_queue.front();
         visit_queue.pop();
         if (!current->isVisited()) { // Make sure we haven't visited this node already
             std::cout << "\tVisiting vertex: " << current->getLabel() << "\n";
             if (current->getLabel() == end.getLabel()) {
                 return current;
             }
-            for (auto& neighbor: current->neighbors) {
+            for (auto& edge: current->edges) {
+                auto neighbor = edge->nodes.second;
                 std::cout << "\t\tLooking at neighbor " << neighbor->getLabel() << " of node " << current->getLabel() <<".\n";
                 if (neighbor->isVisited()) {
                     std::cout << "\t\t\tNeighbor " << neighbor->getLabel() << " is already in the visited set.\n";
@@ -89,9 +88,8 @@ Vertex* Graph::traverseToVertexBfs(Vertex &start, const Vertex& end) {
     return NULL;
 }
 
-void Graph::prepareTraverse() {
+void Graph::prepareTraverse() const {
     // Prepare for a new traversal by marking all nodes as unvisited.
-    std::cout << "Preparing for traversal\n";
     for (auto& node: nodes) {
         node->unVisit();
         node->previous = nullptr;
@@ -108,7 +106,8 @@ void Graph::traverseDfsRecursive(const std::string root) {
 void Graph::recursiveDfs(Vertex& node) {
     node.visit();
     std::cout << "\tVisiting node " << node.getLabel() << "\n";
-    for (auto& neighbor: node.neighbors) {
+    for (auto& edge: node.edges) {
+        auto neighbor = edge->nodes.second;
         if (!neighbor->isVisited()) {
             recursiveDfs(*neighbor);
         }
@@ -120,20 +119,19 @@ void Graph::traverseDfsIterative(const std::string root) {
     prepareTraverse();
 
     Vertex* root_node = getVertex(root);
-    Vertex* current_node;
     std::stack<Vertex*> s;
-
     s.push(root_node);
+
     std::cout << "Iterative DFS traversal starting from node " << root << ":\n";
 
     while (!s.empty()) {
-        current_node = s.top();
+        auto current_node = s.top();
         s.pop();
         if (!current_node->isVisited()) {
             std::cout << "\tVisiting node " << current_node->getLabel() << "\n";
             current_node->visit();
-            for (auto const& neighbor: current_node->neighbors) {
-                s.push(neighbor);
+            for (auto const& edge: current_node->edges) {
+                s.push(edge->nodes.second);
             }
         }
     }
@@ -145,7 +143,8 @@ void Graph::depthLimitedDfs(Vertex& node, int depth) {
     if (depth == 0) {
         return;
     } else if (depth > 0) {
-        for (auto& neighbor: node.neighbors) {
+        for (auto& edge: node.edges) {
+            auto neighbor = edge->nodes.second;
             if (!neighbor->isVisited()) {
                 depthLimitedDfs(*neighbor, depth - 1);
             }

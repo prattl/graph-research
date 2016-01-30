@@ -30,6 +30,17 @@ int main() {
     g.addEdge("8", "9");
     g.addEdge("9", "10");
 
+    // Simulate an undirected graph
+//    g.addEdge("2", "1");
+//    g.addEdge("6", "1");
+//    g.addEdge("3", "2");
+//    g.addEdge("4", "2");
+//    g.addEdge("5", "4");
+//    g.addEdge("7", "6");
+//    g.addEdge("8", "6");
+//    g.addEdge("9", "8");
+//    g.addEdge("10", "9");
+
     g.printGraph();
 
     g.traverseDfsRecursive("1");

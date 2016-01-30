@@ -4,22 +4,26 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include "Edge.h"
 
 namespace graphs {
     class Vertex {
         struct VertexData;
         std::unique_ptr<VertexData> data;
     public:
-        std::vector<Vertex*> neighbors;
-        Vertex* previous;  // Used during traversal
+        std::vector<std::unique_ptr<Edge>> edges;  // Vertices own their originating edges
+//        std::vector<Vertex*> neighbors;
+        Vertex* previous;
 
-        void visit();
-        void unVisit();
-        bool isVisited();
+        void visit() const;
+        void unVisit() const;
+        bool isVisited() const;
 
         std::string getLabel() const;
         void addNeighbor(Vertex&);
         bool isNeighborTo(const Vertex&);
+
+        std::vector<Vertex*> getNeighbors() const;
 
         Vertex(const std::string);
         ~Vertex();

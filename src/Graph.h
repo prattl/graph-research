@@ -5,23 +5,28 @@
 #include <iostream>
 #include <memory>
 #include "Vertex.h"
+//#include "Edge.h"
 
 namespace graphs {
 
     typedef std::unique_ptr<Vertex> smartVertexPtr;
+//    typedef std::unique_ptr<Edge> smartEdgePtr;
 
     class Graph {
         std::vector<smartVertexPtr> nodes;
+//        std::vector<smartEdgePtr> edges;
+
         void recursiveDfs(Vertex&);
         void depthLimitedDfs(Vertex&, int);
 
     public:
         ~Graph();
+
         virtual void printGraph() const;
         virtual void addVertex(const std::string);
-        Vertex* getVertex(const std::string);
-        void prepareTraverse();
-        void addEdge(const std::string, const std::string);
+        Vertex* getVertex(const std::string) const;
+        void prepareTraverse() const;
+        void addEdge(const std::string, const std::string) const;
         virtual Vertex* traverseToVertexBfs(const std::string, const std::string);
         Vertex* traverseToVertexBfs(Vertex&, const Vertex&);
         virtual void traverseDfsRecursive(const std::string);
