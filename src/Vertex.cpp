@@ -15,7 +15,8 @@ struct Vertex::VertexData {
 namespace graphs {
     std::ostream &operator<<(std::ostream &strm, const Vertex &v) {
         std::string neighbors;
-        for (auto const& neighbor: v.getNeighbors()) {
+        for (auto const& edge: v.edges) {
+            auto neighbor = edge->destNode();
             neighbors += neighbor->data->label + ", ";
         }
         neighbors = neighbors.substr(0, neighbors.length() - 2);
@@ -65,7 +66,7 @@ std::string Vertex::getLabel() const {
 }
 
 void Vertex::addNeighbor(Vertex& vertex) {
-    // Adds the vertex as a neighbor of this vertex only if it is not already a neighbor.
+    // Adds the vertex as a neighbor of this vertex
 //    bool isNeighbor = isNeighborTo(vertex);
 //    std::cout << "Is neighbor: " << isNeighbor << "\n";
 //    if (!isNeighbor) {
@@ -77,10 +78,10 @@ void Vertex::addNeighbor(Vertex& vertex) {
 
 bool Vertex::isNeighborTo(const Vertex& vertex) {
     // Returns whether this vertex sees the passed vertex as a neighbor. Note: Does not check whether the passed
-    // vertex considers this vertex as a neighbor. However it should as long as we are using undirected graphs.
+    // vertex considers this vertex as a neighbor. However it should if the graph is undirected.
     std::cout << "Checking if vertex " << vertex.data->label << " is neighbor to " << data->label << "\n";
     for (auto const& edge: edges) {
-        if (edge->nodes.second->data->label == vertex.data->label) {
+        if (edge->destNode()->data->label == vertex.data->label) {
             std::cout << "Returning true\n";
             return true;
         }
@@ -92,7 +93,7 @@ bool Vertex::isNeighborTo(const Vertex& vertex) {
 std::vector<Vertex*> Vertex::getNeighbors() const {
     std::vector<Vertex*> neighbors;
     for (auto const& edge: edges) {
-        neighbors.push_back(edge->nodes.second);
+        neighbors.push_back(edge->destNode());
     }
     return neighbors; // This should be fast because of return value optimization
 }

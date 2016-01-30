@@ -12,7 +12,6 @@ namespace graphs {
         std::unique_ptr<VertexData> data;
     public:
         std::vector<std::unique_ptr<Edge>> edges;  // Vertices own their originating edges
-//        std::vector<Vertex*> neighbors;
         Vertex* previous;
 
         void visit() const;

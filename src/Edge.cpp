@@ -9,28 +9,30 @@ struct Edge::EdgeData {
     int weight;
 };
 
-Edge::Edge(Vertex& source, Vertex& dest) {
-    auto newData = EdgeData{"", "", 0};
+void Edge::init(Vertex& source, Vertex& dest, std::string label, int weight) {
+    auto newData = EdgeData{"", label, weight};
     data = std::make_unique<EdgeData>(std::move(newData));
-    from = &source;
-    to = &dest;
     nodes = std::pair<Vertex*, Vertex*>(&source, &dest);
+}
+
+Edge::Edge(Vertex& source, Vertex& dest) {
+    init(source, dest, "", 0);
 }
 
 Edge::Edge(Vertex& source, Vertex& dest, std::string label) {
-    auto newData = EdgeData{"", label, 0};
-    data = std::make_unique<EdgeData>(std::move(newData));
-    from = &source;
-    to = &dest;
-    nodes = std::pair<Vertex*, Vertex*>(&source, &dest);
+    init(source, dest, label, 0);
 }
 
 Edge::Edge(Vertex& source, Vertex& dest, std::string label, int weight) {
-    auto newData = EdgeData{"", label, weight};
-    data = std::make_unique<EdgeData>(std::move(newData));
-    from = &source;
-    to = &dest;
-    nodes = std::pair<Vertex*, Vertex*>(&source, &dest);
+    init(source, dest, label, weight);
 }
 
 Edge::~Edge() = default;
+
+Vertex* Edge::sourceNode() const {
+    return nodes.first;
+}
+
+Vertex* Edge::destNode() const {
+    return nodes.second;
+}

@@ -10,9 +10,13 @@ namespace graphs {
         struct EdgeData;
         std::unique_ptr<EdgeData> data;
     public:
-        Vertex* from;
-        Vertex* to;
+        // Store connected nodes as a pair (source, dest)
         std::pair<Vertex*, Vertex*> nodes;
+
+        Vertex* sourceNode() const;
+        Vertex* destNode() const;
+
+        void init(Vertex&, Vertex&, std::string, int);
 
         Edge(Vertex&, Vertex&);
 
