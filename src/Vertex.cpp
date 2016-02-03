@@ -77,10 +77,10 @@ void Vertex::addNeighbor(Vertex& vertex) {
 bool Vertex::isNeighborTo(const Vertex& vertex) const {
     // Returns whether this vertex sees the passed vertex as a neighbor. Note: Does not check whether the passed
     // vertex considers this vertex as a neighbor. However it should if the graph is undirected.
-    std::cout << "Checking if vertex " << data->label << " sees vertex " << vertex.data->label << " as a neighbor\n";
+//    std::cout << "Checking if vertex " << data->label << " sees vertex " << vertex.data->label << " as a neighbor\n";
     for (auto const& neighbor: neighbors) {
         if (neighbor->getLabel() == vertex.getLabel()) {
-            std::cout << "Returning true\n";
+//            std::cout << "Returning true\n";
             return true;
         }
     }
@@ -90,7 +90,7 @@ bool Vertex::isNeighborTo(const Vertex& vertex) const {
 //            return true;
 //        }
 //    }
-    std::cout << "Returning false\n";
+//    std::cout << "Returning false\n";
     return false;
 }
 

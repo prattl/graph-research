@@ -12,9 +12,6 @@ namespace hypergraphs {
         // Store connected nodes as a vector
         std::vector<graphs::Vertex*> nodes;
 
-//        graphs::graphs::Vertex* sourceNode() const;
-//        graphs::Vertex* destNode() const;
-
         void init(std::string, int);
 
         HyperEdge();

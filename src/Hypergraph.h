@@ -15,8 +15,6 @@ namespace hypergraphs {
 
         void printGraph() const;
         void addVertex(const std::string);
-//        void printGraph();
-//        void addVertex(std::string);
         void addEdge(std::string);
         void addVertexToEdge(std::string, std::string);
         void addEdgeToVertex(std::string, std::string);

@@ -8,6 +8,7 @@ using namespace std;
 int main() {
     cout << "================== GRAPHS ==================\n";
     graphs::Graph g;
+    graphs::Graph g2;
 
     g.addVertex("1");
     g.addVertex("2");
@@ -28,49 +29,63 @@ int main() {
     g.addEdge("6", "7");
     g.addEdge("6", "8");
     g.addEdge("8", "9");
-    g.addEdge("9", "10");
     g.addEdge("9", "4");
-    g.addEdge("4", "8");
+    g.addEdge("9", "10");
 
-    // Simulate an undirected graph
-//    g.addEdge("2", "1");
-//    g.addEdge("6", "1");
-//    g.addEdge("3", "2");
-//    g.addEdge("4", "2");
-//    g.addEdge("5", "4");
-//    g.addEdge("7", "6");
-//    g.addEdge("8", "6");
-//    g.addEdge("9", "8");
-//    g.addEdge("10", "9");
+    g.traverseDfsRecursive("1");
+    g.traverseDfsIterative("1");
+    g.traverseDfsIterativeDeepening("1");
 
-    g.printGraph();
+    graphs::Vertex* v = g.traverseToVertexBfs("1", "5");
 
-    g.traverseDfsRecursive("4");
-//    g.traverseDfsIterative("1");
-//    g.traverseDfsIterativeDeepening("1");
+    stack<graphs::Vertex*> shortest_path;
+    cout << "Shortest path to " << v->getLabel() << ": \n";
+    shortest_path.push(v);
 
-//    graphs::Vertex* v = g.traverseToVertexBfs("1", "5");
+    while (v->previous) {
+        v = v->previous;
+        shortest_path.push(v);
+    }
+    while (!shortest_path.empty()) {
+        v = shortest_path.top();
+        shortest_path.pop();
 
-//    stack<graphs::Vertex*> shortest_path;
-//    cout << "Shortest path: \n";
-//    shortest_path.push(v);
-//
-//    while (v->previous) {
-//        v = v->previous;
-//        shortest_path.push(v);
-//    }
-//    while (!shortest_path.empty()) {
-//        v = shortest_path.top();
-//        shortest_path.pop();
-//
-//        cout << v->getLabel();
-//        if (!shortest_path.empty()) {
-//            cout << " --> ";
-//        }
-//    }
-//    cout << endl;
+        cout << v->getLabel();
+        if (!shortest_path.empty()) {
+            cout << " --> ";
+        }
+    }
+    cout << endl;
 
-//    cout << "================== HYPERGRAPHS ==================\n";
+
+    g2.addVertex("1");
+    g2.addVertex("2");
+    g2.addVertex("3");
+    g2.addVertex("4");
+
+    g2.addEdge("1", "2");
+    g2.addEdge("1", "3");
+    g2.addEdge("2", "3");
+    g2.addEdge("2", "4");
+    g2.addEdge("2", "1");
+    g2.addEdge("3", "1");
+    g2.addEdge("3", "2");
+    g2.addEdge("4", "2");
+
+    g2.printGraph();
+
+    graphs::Triangle t = g2.findTriangle();
+
+    graphs::AdjacencyMatrix am = g2.buildAdjacencyMatrix();
+    cout << "Adjacency matrix for g2:\n";
+    for (const auto& row: am) {
+        for (const auto& node: row) {
+            cout << node << " ";
+        }
+        cout << "\n";
+    }
+
+    cout << "================== HYPERGRAPHS ==================\n";
     hypergraphs::HyperGraph hg;
 
     hg.addVertex("1");
@@ -107,13 +122,13 @@ int main() {
     hg.addVertexToEdge("9", "c");
     hg.addVertexToEdge("9", "d");
     hg.addVertexToEdge("10", "d");
-//
+
 //    hg.traverseBfs("1");
-//
-//    hg.traverseDfsRecursive("3");
-////    hg.traverseDfsIterative("1");
-////    hg.traverseDfsIterativeDeepening("1");
-//
+
+    hg.traverseDfsRecursive("3");
+//    hg.traverseDfsIterative("1");
+//    hg.traverseDfsIterativeDeepening("1");
+
     hg.printGraph();
 
     return 0;

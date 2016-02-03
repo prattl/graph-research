@@ -5,36 +5,9 @@
 
 using namespace hypergraphs;
 
-//HyperGraph::HyperGraph() {
-//    std::cout << "HyperGraph constructor called" << "\n";
-//}
-//
 HyperGraph::~HyperGraph() {
     std::cout << "HyperGraph destructor called for object at " << this << "\n";
 }
-
-//bool HyperEdge::isVertexInEdge(graphs::smartVertexPtr vertex) {
-//    // Pass the smartVertexPtr by value so that a copy operation is forced to make sure the vertex won't be deleted
-//    // after it goes out of scope within the context of this method.
-//    std::vector<graphs::smartVertexPtr>::iterator found;
-//    found = find(nodes.begin(), nodes.end(), vertex);
-//    return (found != nodes.end());
-//}
-
-//void HyperEdge::addVertex(graphs::smartVertexPtr vertex) {
-//    // Adds the new vertex to this edge. Checks to see if it already is in the edge, and adds it as a neighbor to
-//    // all existing nodes in this edge and adds those nodes as neighbors to the new node.
-//    if (isVertexInEdge(vertex)) {
-//        throw std::logic_error("Vertex with name " + vertex->name + " is already in edge" + name + ".");
-//    }
-//
-//    for (auto const& node: nodes) {
-//        node->addNeighbor(vertex);
-//        vertex->addNeighbor(node);
-//    }
-//
-//    nodes.push_back(vertex);
-//}
 
 void HyperGraph::printGraph() const {
     std::cout << "Hyper";

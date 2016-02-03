@@ -5,7 +5,6 @@
 #include <limits>
 #include <algorithm>
 #include <stack>
-#include <typeinfo>
 
 using namespace graphs;
 
@@ -35,11 +34,11 @@ Vertex* Graph::getVertex(const std::string label) const {
     return nullptr;
 }
 
-void Graph::addEdge(const std::string source, const std::string dest) const {
+void Graph::addEdge(const std::string source, const std::string dest) {
     auto source_vertex = getVertex(source);
     auto dest_vertex = getVertex(dest);
     source_vertex->addNeighbor(*dest_vertex);
-    auto newEdge = std::make_unique<Edge>(source_vertex, dest_vertex);
+    auto newEdge = std::make_unique<Edge>(*source_vertex, *dest_vertex);
     edges.push_back(std::move(newEdge));
 }
 
@@ -169,16 +168,45 @@ void Graph::traverseDfsIterativeDeepening(const std::string root) {
     }
 }
 
-bool search(Graph& subgraph, std::vector<Vertex*>& assignments) {
-    auto assignmentsLength = assignments.size();
-
-    for (auto& edge: subgraph.edges)
-}
-
-std::vector<Vertex*> findIsomorphism(Graph& subgraph) {
-    std::vector<Vertex*> assignments;
-    if (search(subgraph, assignments)) {
-        return assignments;
+Triangle Graph::findTriangle() const {
+    // Returns the first found triangle in the graph, or an empty triangle if no triangles were found.
+    for (const auto& node: nodes) {
+        if (node->neighbors.size() >= 2) {
+            for (const auto& neighbor: node->neighbors) {
+                // See if 2 of node's neighbors are neighbors of each other.
+                for (const auto& neighbor2: neighbor->neighbors) {
+                    // Don't look at the original node
+                    if (neighbor2->getLabel() != node->getLabel()) {
+                        if (neighbor2->isNeighborTo(*neighbor) && node->isNeighborTo(*neighbor2)) {
+                            // Found a triangle: node has 2 neighbors who are neighbors to each other.
+                            std::cout << "Found triangle: " << node->getLabel() << " " << neighbor->getLabel()
+                                << " " << neighbor2->getLabel() << "\n";
+                            return Triangle((node.get()), neighbor, neighbor2);
+                        }
+                    }
+                }
+            }
+        }
     }
-    return nullptr;
+    return Triangle(nullptr, nullptr, nullptr);
 }
+
+AdjacencyMatrix Graph::buildAdjacencyMatrix() {
+    // Builds an adjacency matrix for use in the Ullman algorithm
+    AdjacencyMatrix adjMatrix;
+    for (const auto& node: nodes) {
+        std::vector<int> row;
+        for (int i = 0; i < nodes.size(); i++) {
+            Vertex* element = nodes[i].get();
+            if (node->isNeighborTo(*element)) {
+                row.push_back(1);
+            } else {
+                row.push_back(0);
+            }
+        }
+        adjMatrix.push_back(row);
+    }
+    return adjMatrix; // Returning this shouldn't be slow because of return value optimization
+}
+
+//AdjacencyMatrix ullman();

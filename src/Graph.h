@@ -5,36 +5,41 @@
 #include <iostream>
 #include <memory>
 #include "Vertex.h"
-//#include "Edge.h"
+#include <tuple>
 
 namespace graphs {
 
     typedef std::unique_ptr<Vertex> smartVertexPtr;
     typedef std::unique_ptr<Edge> smartEdgePtr;
+    typedef std::tuple<Vertex*, Vertex*, Vertex*> Triangle;
+    typedef std::vector<std::vector<int>> AdjacencyMatrix;
 
     class Graph {
         std::vector<smartVertexPtr> nodes;
-        std::vector<smartEdgePtr> edges;
 
         void recursiveDfs(Vertex&);
         void depthLimitedDfs(Vertex&, int);
 
     public:
+        std::vector<smartEdgePtr> edges;
+
         virtual ~Graph();
 
         virtual void printGraph() const;
         virtual void addVertex(const std::string);
         Vertex* getVertex(const std::string) const;
         void prepareTraverse() const;
-        void addEdge(const std::string, const std::string) const;
+        void addEdge(const std::string, const std::string);
         virtual Vertex* traverseToVertexBfs(const std::string, const std::string);
         Vertex* traverseToVertexBfs(Vertex&, const Vertex&);
         virtual void traverseDfsRecursive(const std::string);
         void traverseDfsIterative(const std::string);
         void traverseDfsIterativeDeepening(const std::string);
 
-        bool search(Graph&, std::vector<Vertex*>&);
-        std::vector<Vertex*> findIsomorphism(Graph&);
+        Triangle findTriangle() const;
+
+        AdjacencyMatrix buildAdjacencyMatrix();
+//        AdjacencyMatrix ullman();
     };
 }
 
