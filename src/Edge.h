@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+//#include "Vertex.h"
 
 namespace graphs {
     class Vertex;

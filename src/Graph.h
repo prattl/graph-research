@@ -10,17 +10,15 @@
 namespace graphs {
 
     typedef std::unique_ptr<Vertex> smartVertexPtr;
-//    typedef std::unique_ptr<Edge> smartEdgePtr;
 
     class Graph {
         std::vector<smartVertexPtr> nodes;
-//        std::vector<smartEdgePtr> edges;
 
         void recursiveDfs(Vertex&);
         void depthLimitedDfs(Vertex&, int);
 
     public:
-        ~Graph();
+        virtual ~Graph();
 
         virtual void printGraph() const;
         virtual void addVertex(const std::string);
@@ -32,6 +30,7 @@ namespace graphs {
         virtual void traverseDfsRecursive(const std::string);
         void traverseDfsIterative(const std::string);
         void traverseDfsIterativeDeepening(const std::string);
+
     };
 }
 

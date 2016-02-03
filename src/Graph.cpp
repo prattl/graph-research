@@ -10,7 +10,7 @@
 using namespace graphs;
 
 Graph::~Graph() {
-    std::cout << "Graph destructor called" << "\n";
+    std::cout << "Graph destructor called for object at " << this << "\n";
 }
 
 void Graph::printGraph() const {
@@ -39,7 +39,6 @@ void Graph::addEdge(const std::string source, const std::string dest) const {
     auto source_vertex = getVertex(source);
     auto dest_vertex = getVertex(dest);
     source_vertex->addNeighbor(*dest_vertex);
-//    v2->addNeighbor(*v1);
 }
 
 Vertex* Graph::traverseToVertexBfs(const std::string start, const std::string end) {
@@ -69,8 +68,9 @@ Vertex* Graph::traverseToVertexBfs(Vertex &start, const Vertex& end) {
             if (current->getLabel() == end.getLabel()) {
                 return current;
             }
-            for (auto& edge: current->edges) {
-                auto neighbor = edge->destNode();
+//            for (auto& edge: current->edges) {
+            for (auto& neighbor: current->neighbors) {
+//                auto neighbor = edge->destNode();
                 std::cout << "\t\tLooking at neighbor " << neighbor->getLabel() << " of node " << current->getLabel() <<".\n";
                 if (neighbor->isVisited()) {
                     std::cout << "\t\t\tNeighbor " << neighbor->getLabel() << " is already in the visited set.\n";
@@ -106,8 +106,9 @@ void Graph::traverseDfsRecursive(const std::string root) {
 void Graph::recursiveDfs(Vertex& node) {
     node.visit();
     std::cout << "\tVisiting node " << node.getLabel() << "\n";
-    for (auto& edge: node.edges) {
-        auto neighbor = edge->destNode();
+//    for (auto& edge: node.edges) {
+    for (auto& neighbor: node.neighbors) {
+//        auto neighbor = edge->destNode();
         if (!neighbor->isVisited()) {
             recursiveDfs(*neighbor);
         }
@@ -130,8 +131,10 @@ void Graph::traverseDfsIterative(const std::string root) {
         if (!current_node->isVisited()) {
             std::cout << "\tVisiting node " << current_node->getLabel() << "\n";
             current_node->visit();
-            for (auto const& edge: current_node->edges) {
-                s.push(edge->destNode());
+//            for (auto const& edge: current_node->edges) {
+            for (auto const& neighbor: current_node->neighbors) {
+//                s.push(edge->destNode());
+                s.push(neighbor);
             }
         }
     }
@@ -143,8 +146,9 @@ void Graph::depthLimitedDfs(Vertex& node, int depth) {
     if (depth == 0) {
         return;
     } else if (depth > 0) {
-        for (auto& edge: node.edges) {
-            auto neighbor = edge->destNode();
+//        for (auto& edge: node.edges) {
+        for (auto& neighbor: node.neighbors) {
+//            auto neighbor = edge->destNode();
             if (!neighbor->isVisited()) {
                 depthLimitedDfs(*neighbor, depth - 1);
             }

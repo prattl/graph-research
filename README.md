@@ -16,5 +16,5 @@ and also to re-familiarize with C++ and learn some of the new features introduce
   - [ ] Shortest path
 - [ ] Simple parser (with Boost Spirit?) to construct graphs
 - [x] Smart pointers
-- [ ] Use const when possible
-- [ ] Move vertex & edge data to struct (pimpl)
+- [x] Use const when possible
+- [x] Move vertex & edge data to struct (pimpl)

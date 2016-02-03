@@ -5,44 +5,42 @@
 
 using namespace hypergraphs;
 
-bool HyperEdge::isVertexInEdge(graphs::smartVertexPtr vertex) {
-    // Pass the smartVertexPtr by value so that a copy operation is forced to make sure the vertex won't be deleted
-    // after it goes out of scope within the context of this method.
-    std::vector<graphs::smartVertexPtr>::iterator found;
-    found = find(nodes.begin(), nodes.end(), vertex);
-    return (found != nodes.end());
+//HyperGraph::HyperGraph() {
+//    std::cout << "HyperGraph constructor called" << "\n";
+//}
+//
+HyperGraph::~HyperGraph() {
+    std::cout << "HyperGraph destructor called for object at " << this << "\n";
 }
 
-void HyperEdge::addVertex(graphs::smartVertexPtr vertex) {
-    // Adds the new vertex to this edge. Checks to see if it already is in the edge, and adds it as a neighbor to
-    // all existing nodes in this edge and adds those nodes as neighbors to the new node.
-    if (isVertexInEdge(vertex)) {
-        throw std::logic_error("Vertex with name " + vertex->name + " is already in edge" + name + ".");
-    }
+//bool HyperEdge::isVertexInEdge(graphs::smartVertexPtr vertex) {
+//    // Pass the smartVertexPtr by value so that a copy operation is forced to make sure the vertex won't be deleted
+//    // after it goes out of scope within the context of this method.
+//    std::vector<graphs::smartVertexPtr>::iterator found;
+//    found = find(nodes.begin(), nodes.end(), vertex);
+//    return (found != nodes.end());
+//}
 
-    for (auto const& node: nodes) {
-        node->addNeighbor(vertex);
-        vertex->addNeighbor(node);
-    }
+//void HyperEdge::addVertex(graphs::smartVertexPtr vertex) {
+//    // Adds the new vertex to this edge. Checks to see if it already is in the edge, and adds it as a neighbor to
+//    // all existing nodes in this edge and adds those nodes as neighbors to the new node.
+//    if (isVertexInEdge(vertex)) {
+//        throw std::logic_error("Vertex with name " + vertex->name + " is already in edge" + name + ".");
+//    }
+//
+//    for (auto const& node: nodes) {
+//        node->addNeighbor(vertex);
+//        vertex->addNeighbor(node);
+//    }
+//
+//    nodes.push_back(vertex);
+//}
 
-    nodes.push_back(vertex);
-}
-
-namespace hypergraphs {
-    std::ostream &operator<<(std::ostream &strm, const HyperEdge &he) {
-        std::string nodes_str;
-        for (auto const &node: he.nodes) {
-            nodes_str += node->name + ", ";
-        }
-        nodes_str = nodes_str.substr(0, nodes_str.length() - 2);
-        return strm << "Edge: " << he.name << " (nodes: " << nodes_str << ")";
-    }
-}
-
-void HyperGraph::printGraph() {
+void HyperGraph::printGraph() const {
+    std::cout << "Hyper";
     graphs::Graph::printGraph();
-    for (auto const& edge: edges) {
-        std::cout << "\t" << *(edge) << "\n";
+    for (const auto& edge: edges) {
+        std::cout << "\t" << (*edge) << "\n";
     }
 }
 
@@ -51,80 +49,75 @@ void HyperGraph::addVertex(std::string name) {
 }
 
 void HyperGraph::addEdge(std::string name) {
-    // Make sure it doesn't already exist
-    smartEdgePtr existing_edge = getEdge(name);
-    if (existing_edge) {
-        throw std::logic_error("Edge with name " + name + " already exists.");
-    }
-    smartEdgePtr new_edge(new HyperEdge(name));
-    edges.push_back(new_edge);
+    smartEdgePtr newEdge = std::make_unique<HyperEdge>(name);
+    edges.push_back(std::move(newEdge));
 }
 
-smartEdgePtr HyperGraph::getEdge(std::string name) {
-    for (auto& edge: edges) {
-        if (edge->name == name) {
-            return edge;
+HyperEdge* HyperGraph::getEdge(std::string name) {
+    for (const auto& edge: edges) {
+        if (edge->getLabel() == name) {
+            return edge.get();
         }
     }
     return nullptr;
 }
 
-void HyperGraph::connectVertexToEdge(std::string vertex_name, std::string edge_name) {
-    graphs::smartVertexPtr vertex = graphs::Graph::getVertex(vertex_name);
-    if (!vertex) {
-        throw std::logic_error("Vertex with name " + vertex_name + " does not exist.");
-    }
-
-    smartEdgePtr edge = getEdge(edge_name);
-    if (!edge) {
-        throw std::logic_error("Edge with name " + edge_name + " does not exist.");
-    }
-
-    edge->addVertex(vertex);
+void HyperGraph::addVertexToEdge(std::string vertex_name, std::string edge_name) {
+    // Add the given vertex as a member of the given edge
+    graphs::Vertex* vertex = graphs::Graph::getVertex(vertex_name);
+    HyperEdge* edge = getEdge(edge_name);
+    edge->addNode(*vertex);
 }
 
-graphs::smartVertexPtr HyperGraph::traverseToVertexBfs(std::string start_name, std::string end_name) {
+void HyperGraph::addEdgeToVertex(std::string edge_name, std::string vertex_name) {
+    // Mark the given vertex as belonging to the given edge
+    graphs::Vertex* vertex = graphs::Graph::getVertex(vertex_name);
+    HyperEdge* edge = getEdge(edge_name);
+    // TODO: Derive HyperEdge from Edge
+//    vertex->addEdge(*edge);
+}
+
+graphs::Vertex* HyperGraph::traverseToVertexBfs(std::string start_name, std::string end_name) {
     return graphs::Graph::traverseToVertexBfs(start_name, end_name);
 }
 
 
-void HyperGraph::traverseBfs(std::string root_name) {
-    graphs::smartVertexPtr root_node = getVertex(root_name);
-    traverseBfs(root_node);
-}
+//void HyperGraph::traverseBfs(std::string root_name) {
+//    graphs::smartVertexPtr root_node = getVertex(root_name);
+//    traverseBfs(root_node);
+//}
 
-void HyperGraph::traverseBfs(graphs::smartVertexPtr root) {
-    // Traverse the entire graph until all nodes have been visited.
-    graphs::Graph::prepareTraverse();
-    std::queue<graphs::smartVertexPtr> visit_queue;
-
-    std::cout << "Hypergraph BFS traversal starting from node " << root->name << ":\n";
-
-    visit_queue.push(root);
-    graphs::smartVertexPtr current;
-
-    while (!visit_queue.empty()) {
-        current = visit_queue.front();
-        visit_queue.pop();
-
-        if (!current->visited) {
-            std::cout << "\tVisiting vertex: " << current->name << "\n";
-
-            for (auto& neighbor: current->neighbors) {
-                std::cout << "\t\tLooking at neighbor " << neighbor->name << " of node " << current->name <<".\n";
-                if (neighbor->visited) {
-                    std::cout << "\t\t\tNeighbor " << neighbor->name << " has already been visited.\n";
-                } else {
-                    std::cout << "\t\t\tAdding " << neighbor->name << " to the visit queue.\n";
-                    // If it's already in the queue, we'll skip it above after we visit it the first time.
-                    neighbor->previous = current;
-                    visit_queue.push(neighbor);
-                }
-            }
-            current->visited = true;
-        }
-    }
-}
+//void HyperGraph::traverseBfs(graphs::Vertex& root) {
+//    // Traverse the entire graph until all nodes have been visited.
+//    graphs::Graph::prepareTraverse();
+//    std::queue<graphs::Vertex*> visit_queue;
+//
+//    std::cout << "Hypergraph BFS traversal starting from node " << root->name << ":\n";
+//
+//    visit_queue.push(&root);
+//
+//    while (!visit_queue.empty()) {
+//        auto current = visit_queue.front();
+//        visit_queue.pop();
+//
+//        if (!current->visited) {
+//            std::cout << "\tVisiting vertex: " << current->name << "\n";
+//
+//            for (auto& neighbor: current->neighbors) {
+//                std::cout << "\t\tLooking at neighbor " << neighbor->name << " of node " << current->name <<".\n";
+//                if (neighbor->visited) {
+//                    std::cout << "\t\t\tNeighbor " << neighbor->name << " has already been visited.\n";
+//                } else {
+//                    std::cout << "\t\t\tAdding " << neighbor->name << " to the visit queue.\n";
+//                    // If it's already in the queue, we'll skip it above after we visit it the first time.
+//                    neighbor->previous = current;
+//                    visit_queue.push(neighbor);
+//                }
+//            }
+//            current->visited = true;
+//        }
+//    }
+//}
 
 void HyperGraph::traverseDfsRecursive(std::string root_name) {
     graphs::Graph::traverseDfsRecursive(root_name);
