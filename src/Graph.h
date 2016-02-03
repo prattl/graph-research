@@ -10,9 +10,11 @@
 namespace graphs {
 
     typedef std::unique_ptr<Vertex> smartVertexPtr;
+    typedef std::unique_ptr<Edge> smartEdgePtr;
 
     class Graph {
         std::vector<smartVertexPtr> nodes;
+        std::vector<smartEdgePtr> edges;
 
         void recursiveDfs(Vertex&);
         void depthLimitedDfs(Vertex&, int);
@@ -31,6 +33,8 @@ namespace graphs {
         void traverseDfsIterative(const std::string);
         void traverseDfsIterativeDeepening(const std::string);
 
+        bool search(Graph&, std::vector<Vertex*>&);
+        std::vector<Vertex*> findIsomorphism(Graph&);
     };
 }
 

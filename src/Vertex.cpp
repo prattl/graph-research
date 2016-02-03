@@ -69,8 +69,8 @@ std::string Vertex::getLabel() const {
 }
 
 void Vertex::addNeighbor(Vertex& vertex) {
-    auto newEdge = std::make_unique<Edge>((*this), vertex);
-    edges.push_back(std::move(newEdge));
+//    auto newEdge = std::make_unique<Edge>((*this), vertex);
+//    edges.push_back(std::move(newEdge));
     neighbors.push_back(&vertex);
 }
 
@@ -98,10 +98,10 @@ bool Vertex::isNeighborTo(const Vertex& vertex) const {
 //    edges.push_back(edge);
 //}
 
-std::vector<Vertex*> Vertex::getNeighbors() const {
-    std::vector<Vertex*> neighbors;
-    for (auto const& edge: edges) {
-        neighbors.push_back(edge->destNode());
-    }
-    return neighbors; // This should be fast because of return value optimization
-}
+//std::vector<Vertex*> Vertex::getNeighbors() const {
+//    std::vector<Vertex*> neighbors;
+//    for (auto const& edge: edges) {
+//        neighbors.push_back(edge->destNode());
+//    }
+//    return neighbors; // This should be fast because of return value optimization
+//}

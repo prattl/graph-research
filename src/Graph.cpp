@@ -39,6 +39,8 @@ void Graph::addEdge(const std::string source, const std::string dest) const {
     auto source_vertex = getVertex(source);
     auto dest_vertex = getVertex(dest);
     source_vertex->addNeighbor(*dest_vertex);
+    auto newEdge = std::make_unique<Edge>(source_vertex, dest_vertex);
+    edges.push_back(std::move(newEdge));
 }
 
 Vertex* Graph::traverseToVertexBfs(const std::string start, const std::string end) {
@@ -165,4 +167,18 @@ void Graph::traverseDfsIterativeDeepening(const std::string root) {
         depthLimitedDfs(*root_node, depth);
         std::cout << "\n";
     }
+}
+
+bool search(Graph& subgraph, std::vector<Vertex*>& assignments) {
+    auto assignmentsLength = assignments.size();
+
+    for (auto& edge: subgraph.edges)
+}
+
+std::vector<Vertex*> findIsomorphism(Graph& subgraph) {
+    std::vector<Vertex*> assignments;
+    if (search(subgraph, assignments)) {
+        return assignments;
+    }
+    return nullptr;
 }

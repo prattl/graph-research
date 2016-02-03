@@ -13,7 +13,7 @@ namespace graphs {
     public:
         // TODO: Should vertices hold pointers to their edges or an adjacency list of neighbors?
         std::vector<Vertex*> neighbors;
-        std::vector<std::unique_ptr<Edge>> edges;  // Vertices own their originating edges
+//        std::vector<std::unique_ptr<Edge>> edges;  // Vertices own their originating edges
         Vertex* previous;
 
         void visit() const;
@@ -25,7 +25,7 @@ namespace graphs {
         bool isNeighborTo(const Vertex&) const;
 //        void addEdge(const Edge&);
 
-        std::vector<Vertex*> getNeighbors() const;
+//        std::vector<Vertex*> getNeighbors() const;
 
         Vertex(const std::string);
         ~Vertex();
