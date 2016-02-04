@@ -16,6 +16,8 @@ namespace graphs {
 //        std::vector<std::unique_ptr<Edge>> edges;  // Vertices own their originating edges
         Vertex* previous;
 
+        bool matched; // Temporary, for use in Ullmann traversal
+
         void visit() const;
         void unVisit() const;
         bool isVisited() const;

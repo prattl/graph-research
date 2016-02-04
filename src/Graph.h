@@ -14,6 +14,9 @@ namespace graphs {
     typedef std::tuple<Vertex*, Vertex*, Vertex*> Triangle;
     typedef std::vector<std::vector<int>> AdjacencyMatrix;
 
+    typedef std::vector<Vertex*> vertexList;
+    typedef std::vector<std::pair<int, int>> embedding;
+
     class Graph {
         std::vector<smartVertexPtr> nodes;
 
@@ -42,10 +45,11 @@ namespace graphs {
         Triangle findTriangle() const;
 
         AdjacencyMatrix buildAdjacencyMatrix();
-//        AdjacencyMatrix ullman();
 
-        std::vector<Vertex*> filterCandidates(const Graph&, const Vertex&) const;
         void ullmann(Graph&);
+        vertexList ullmannFilterCandidates(const Graph&, const Vertex&) const;
+        embedding UllmannSubgraphSearch(Graph&, embedding&);
+        vertexList ullmannRefineCandidates(const Graph&, const Vertex&) const;
     };
 }
 

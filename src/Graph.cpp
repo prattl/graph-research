@@ -224,27 +224,54 @@ AdjacencyMatrix Graph::buildAdjacencyMatrix() {
     return adjMatrix; // Returning this shouldn't be slow because of return value optimization
 }
 
-std::vector<Vertex*> Graph::filterCandidates(const Graph& query, const Vertex& queryNode) const {
+void Graph::ullmann(Graph& query) {
+    // Implementation of the ullmann subgraph isomorphism algorithm as described here:
+    // http://www.vldb.org/pvldb/vol6/p133-han.pdf
+    embedding M;
+
+    // First, make sure each node in the query graph can be mapped to a possible node in the data graph
+    for (const auto& node: query.nodes) {
+        vertexList candidates = ullmannFilterCandidates(query, (*node.get()));
+        if (candidates.empty()) {
+            std::cout << "No candidates found for node " << node->getLabel() << ".\n"
+            return;
+        }
+    }
+
+    UllmannSubgraphSearch(query, M);
+}
+
+vertexList Graph::ullmannFilterCandidates(const Graph& query, const Vertex& queryNode) const {
     // Return list of vertices of this graph which have a matching label of the passed query graph node
-    std::vector<Vertex*> candidates;
+    vertexList candidates;
     std::cout << "Filtering candidates for: " << queryNode.getLabel() << "\n";
     for (const auto& potentialCandidate: nodes) {
         if (potentialCandidate->getLabel() == queryNode.getLabel()) {
             candidates.push_back(potentialCandidate.get());
-            std::cout << "Adding candidate: " << (*potentialCandidate.get()) << "\n";
+            std::cout << "\tAdding candidate: " << (*potentialCandidate.get()) << "\n";
         }
     }
     return candidates;
 }
 
-void Graph::ullmann(Graph& query) {
-    // Implementation of the ullmann subgraph isomorphism algorithm as described here:
-    // http://www.vldb.org/pvldb/vol6/p133-han.pdf
-    std::vector<std::pair<int, int>> M;
-
-    for (const auto& node: query.nodes) {
-        // Filter candidates
-        std::vector<Vertex*> candidates = filterCandidates(query, (*node.get()));
-        // If candidates empty, return
+embedding Graph::UllmannSubgraphSearch(Graph& query, embedding& M) {
+    // Return when all vertices in query are contained in M
+    // TODO: Check vertices, not size
+    if (M.size() == query.nodes.size()) {
+        return M;
     }
+
+    Vertex* u;
+    // Choose a vertex from query that has not been matched
+    // TODO: Change logic to check if node is not in M instead of checking `matched`
+    for (const auto& node: query.nodes) {
+        if (!node->matched) {
+            u = node.get();
+            break;
+        }
+    }
+}
+
+vertexList Graph::ullmannRefineCandidates(embedding& M, Vertex& u, vertexList& candidates) const {
+    // TODO: Refine candidates set by removing all nodes in `candidates` that have a smaller degree than `u`
 }
