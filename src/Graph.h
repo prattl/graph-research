@@ -36,10 +36,16 @@ namespace graphs {
         void traverseDfsIterative(const std::string);
         void traverseDfsIterativeDeepening(const std::string);
 
+        int getVertexInDegree(const Vertex&) const;
+        int getVertexOutDegree(const Vertex&) const;
+
         Triangle findTriangle() const;
 
         AdjacencyMatrix buildAdjacencyMatrix();
 //        AdjacencyMatrix ullman();
+
+        std::vector<Vertex*> filterCandidates(const Graph&, const Vertex&) const;
+        void ullmann(Graph&);
     };
 }
 

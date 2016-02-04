@@ -168,6 +168,21 @@ void Graph::traverseDfsIterativeDeepening(const std::string root) {
     }
 }
 
+int Graph::getVertexInDegree(const Vertex& vertex) const {
+    // Returns the vertex's in degree
+    int degree = 0;
+    for (const auto& node: nodes) {
+        if (node->isNeighborTo(vertex)) {
+            degree++;
+        }
+    }
+    return degree;
+}
+
+int Graph::getVertexOutDegree(const Vertex& vertex) const {
+    return (int)vertex.neighbors.size();
+}
+
 Triangle Graph::findTriangle() const {
     // Returns the first found triangle in the graph, or an empty triangle if no triangles were found.
     for (const auto& node: nodes) {
@@ -209,4 +224,27 @@ AdjacencyMatrix Graph::buildAdjacencyMatrix() {
     return adjMatrix; // Returning this shouldn't be slow because of return value optimization
 }
 
-//AdjacencyMatrix ullman();
+std::vector<Vertex*> Graph::filterCandidates(const Graph& query, const Vertex& queryNode) const {
+    // Return list of vertices of this graph which have a matching label of the passed query graph node
+    std::vector<Vertex*> candidates;
+    std::cout << "Filtering candidates for: " << queryNode.getLabel() << "\n";
+    for (const auto& potentialCandidate: nodes) {
+        if (potentialCandidate->getLabel() == queryNode.getLabel()) {
+            candidates.push_back(potentialCandidate.get());
+            std::cout << "Adding candidate: " << (*potentialCandidate.get()) << "\n";
+        }
+    }
+    return candidates;
+}
+
+void Graph::ullmann(Graph& query) {
+    // Implementation of the ullmann subgraph isomorphism algorithm as described here:
+    // http://www.vldb.org/pvldb/vol6/p133-han.pdf
+    std::vector<std::pair<int, int>> M;
+
+    for (const auto& node: query.nodes) {
+        // Filter candidates
+        std::vector<Vertex*> candidates = filterCandidates(query, (*node.get()));
+        // If candidates empty, return
+    }
+}
