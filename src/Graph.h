@@ -46,10 +46,15 @@ namespace graphs {
 
         AdjacencyMatrix buildAdjacencyMatrix();
 
+        // Basic isomorphism algorithm methods
+        vertexList findIsomorphism(Graph&);
+        bool isomorphismSearch(Graph&, vertexList&);
+
+        // Ullmann algorithm methods
         void ullmann(Graph&);
         vertexList ullmannFilterCandidates(const Graph&, const Vertex&) const;
         embedding UllmannSubgraphSearch(Graph&, embedding&);
-        vertexList ullmannRefineCandidates(const Graph&, const Vertex&) const;
+        vertexList ullmannRefineCandidates(embedding&, Vertex&, vertexList&) const;
     };
 }
 

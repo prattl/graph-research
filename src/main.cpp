@@ -46,7 +46,12 @@ int main() {
     cout << "Graph 2:\n";
     g2.printGraph();
 
-    g.genericQueryMatching(g2);
+    graphs::vertexList iso = g.findIsomorphism(g2);
+    cout << "Found isomorphism:\n";
+    for (auto& node: iso) {
+        cout << "\t" << *node << "\n";
+    }
+//    g.ullmann(g2);
 
 //    g.traverseDfsRecursive("1");
 //    g.traverseDfsIterative("1");

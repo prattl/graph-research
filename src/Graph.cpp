@@ -224,6 +224,49 @@ AdjacencyMatrix Graph::buildAdjacencyMatrix() {
     return adjMatrix; // Returning this shouldn't be slow because of return value optimization
 }
 
+vertexList Graph::findIsomorphism(Graph& query) {
+    std::cout << "findIsomorphism()\n";
+    vertexList assignments;
+    if (isomorphismSearch(query, assignments)) {
+        return assignments;
+    }
+
+    return assignments;
+}
+
+bool Graph::isomorphismSearch(Graph& query, vertexList& assignments) {
+    std::cout << "isomorphismSearch()\n";
+    int i = (int)assignments.size();
+
+    // Make sure each query node can map to a data graph node
+    for (const auto& node: query.nodes) {
+        vertexList candidates = ullmannFilterCandidates(query, (*node.get()));
+        if (candidates.empty()) {
+            std::cout << "No candidates found for node " << node->getLabel() << ". Cannot find an isomorphism.\n";
+            return false;
+        }
+    }
+
+    if (i == (int)query.nodes.size()) {
+        return true;
+    }
+
+    // Go through all possible assignments
+    for (auto& node: nodes) {
+        if (std::find(assignments.begin(), assignments.end(), node.get()) == assignments.end()) {
+            // node not in assignments
+            std::cout << "Adding node " << *node.get() << " to assignments.\n";
+            assignments.push_back(node.get());
+            if (isomorphismSearch(query, assignments)) {
+                std::cout << "Found an isomorphism\n";
+                return true;
+            }
+            assignments.erase(assignments.begin());
+        }
+    }
+}
+
+
 void Graph::ullmann(Graph& query) {
     // Implementation of the ullmann subgraph isomorphism algorithm as described here:
     // http://www.vldb.org/pvldb/vol6/p133-han.pdf
@@ -233,7 +276,7 @@ void Graph::ullmann(Graph& query) {
     for (const auto& node: query.nodes) {
         vertexList candidates = ullmannFilterCandidates(query, (*node.get()));
         if (candidates.empty()) {
-            std::cout << "No candidates found for node " << node->getLabel() << ".\n"
+            std::cout << "No candidates found for node " << node->getLabel() << ".\n";
             return;
         }
     }
@@ -257,6 +300,9 @@ vertexList Graph::ullmannFilterCandidates(const Graph& query, const Vertex& quer
 embedding Graph::UllmannSubgraphSearch(Graph& query, embedding& M) {
     // Return when all vertices in query are contained in M
     // TODO: Check vertices, not size
+    std::cout << "UllmannSubgraphSearch()\n";
+
+    // All vertices in the query have been mapped
     if (M.size() == query.nodes.size()) {
         return M;
     }
