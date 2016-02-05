@@ -207,7 +207,7 @@ Triangle Graph::findTriangle() const {
 }
 
 AdjacencyMatrix Graph::buildAdjacencyMatrix() {
-    // Builds an adjacency matrix for use in the Ullman algorithm
+    // Builds an adjacency matrix
     AdjacencyMatrix adjMatrix;
     for (const auto& node: nodes) {
         std::vector<int> row;
@@ -265,7 +265,6 @@ bool Graph::isomorphismSearch(Graph& query, vertexList& assignments) {
         }
     }
 }
-
 
 void Graph::ullmann(Graph& query) {
     // Implementation of the ullmann subgraph isomorphism algorithm as described here:
