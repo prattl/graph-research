@@ -10,10 +10,13 @@ HyperGraph::~HyperGraph() {
 }
 
 void HyperGraph::printGraph() const {
-    std::cout << "Hyper";
-    graphs::Graph::printGraph();
+    std::cout << "Graph:\n";
+    for (auto const& node: nodes) {
+        std::cout << "\t";
+//        std::cout << (*node) << "\n";
+    }
     for (const auto& edge: edges) {
-        std::cout << "\t" << (*edge) << "\n";
+        std::cout << "\t" << edge.get() << "\n";
     }
 }
 
@@ -22,7 +25,7 @@ void HyperGraph::addVertex(std::string name) {
 }
 
 void HyperGraph::addEdge(std::string name) {
-    smartEdgePtr newEdge = std::make_unique<HyperEdge>(name);
+    smartHyperEdgePtr newEdge = std::make_unique<HyperEdge>(name);
     edges.push_back(std::move(newEdge));
 }
 

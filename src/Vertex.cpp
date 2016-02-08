@@ -7,6 +7,7 @@
 using namespace graphs;
 
 struct Vertex::VertexData {
+public:
     std::string uuid;
     std::string label;
     bool visited;
@@ -27,24 +28,26 @@ namespace graphs {
     }
 }
 
-Vertex::Vertex(const std::string s) {
-    auto newData = VertexData{"", s};
-    data = std::make_unique<VertexData>(std::move(newData));
-};
+Vertex::Vertex(const std::string s) :
+        data(std::make_unique<VertexData>(VertexData{"", s})) {};
 
 Vertex::~Vertex() = default;
 
-// Not used yet but this is how it would be implemented
+std::string Vertex::getUuid() const {
+    return data->uuid;
+}
+
+// Not used yet but this is how it would be implemented (copy constructor)
 Vertex::Vertex(const Vertex& rhs) : data(nullptr) {
-    std::cout << "Copy constructor called for " << data->label << " with rhs " << rhs.data->label << "\n";
+    std::cout << "Copy constructor called for " << rhs.getLabel() << "\n";
     if (rhs.data) {
         data = std::make_unique<VertexData>(*rhs.data);
     }
 }
 
-// Not used yet but this is how it would be implemented
+// Not used yet but this is how it would be implemented (assignment operator)
 Vertex& Vertex::operator=(const Vertex& rhs) {
-    std::cout << "Assignment operator called for " << data->label << " with rhs " << rhs.data->label << "\n";
+    std::cout << "Assignment operator called for " << rhs.getLabel() << "\n";
     if (rhs.data) data.reset();
     else if (!data) data = std::make_unique<VertexData>(*rhs.data);
     else *data = *rhs.data;

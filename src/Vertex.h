@@ -18,6 +18,8 @@ namespace graphs {
 
         bool matched; // Temporary, for use in Ullmann traversal
 
+        std::string getUuid() const;
+
         void visit() const;
         void unVisit() const;
         bool isVisited() const;

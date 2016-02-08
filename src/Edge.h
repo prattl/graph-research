@@ -17,8 +17,6 @@ namespace graphs {
         Vertex* sourceNode() const;
         Vertex* destNode() const;
 
-        void init(Vertex&, Vertex&, std::string, int);
-
         Edge(Vertex&, Vertex&);
 
         Edge(Vertex&, Vertex&, std::string);

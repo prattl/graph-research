@@ -17,26 +17,18 @@ namespace hypergraphs {
             nodes_str += (*node).getLabel() + ", ";
         }
         nodes_str = nodes_str.substr(0, nodes_str.length() - 2);
-        return strm << "Edge: " << he.data->label << " (nodes: " << nodes_str << ")";
+        return strm << "Edge: " << he.getLabel() << " (nodes: " << nodes_str << ")";
     }
 }
 
-void HyperEdge::init(std::string label, int weight) {
-    auto newData = EdgeData{"", label, weight};
-    data = std::make_unique<EdgeData>(std::move(newData));
-}
+HyperEdge::HyperEdge() :
+    data(std::make_unique<EdgeData>(EdgeData{"", "", 0})) {};
 
-HyperEdge::HyperEdge() {
-    init("", 0);
-}
+HyperEdge::HyperEdge(std::string label) :
+    data(std::make_unique<EdgeData>(EdgeData{"", label, 0})) {};
 
-HyperEdge::HyperEdge(std::string label) {
-    init(label, 0);
-}
-
-HyperEdge::HyperEdge(std::string label, int weight) {
-    init(label, weight);
-}
+HyperEdge::HyperEdge(std::string label, int weight) :
+    data(std::make_unique<EdgeData>(EdgeData{"", label, weight})) {};
 
 HyperEdge::~HyperEdge() = default;
 
@@ -60,8 +52,6 @@ HyperEdge& HyperEdge::operator=(const HyperEdge& rhs) {
 }
 
 void HyperEdge::addNode(graphs::Vertex& newNode) {
-    // For now add nodes without direction - retroactively make old nodes neighbors of newly added nodes
-    // TODO: What does it mean for a hypergraph to be directed?
     for (auto& node: nodes) {
         if (!node->isNeighborTo(newNode)) {
             node->addNeighbor(newNode);

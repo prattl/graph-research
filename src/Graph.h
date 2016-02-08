@@ -13,21 +13,16 @@ namespace graphs {
     typedef std::unique_ptr<Edge> smartEdgePtr;
     typedef std::tuple<Vertex*, Vertex*, Vertex*> Triangle;
     typedef std::vector<std::vector<int>> AdjacencyMatrix;
-
     typedef std::vector<Vertex*> vertexList;
     typedef std::vector<std::pair<int, int>> embedding;
 
     class Graph {
         std::vector<smartVertexPtr> nodes;
-
         void recursiveDfs(Vertex&);
         void depthLimitedDfs(Vertex&, int);
-
     public:
         std::vector<smartEdgePtr> edges;
-
         virtual ~Graph();
-
         virtual void printGraph() const;
         virtual void addVertex(const std::string);
         Vertex* getVertex(const std::string) const;

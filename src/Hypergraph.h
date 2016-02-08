@@ -9,7 +9,8 @@
 
 namespace hypergraphs {
     class HyperGraph : graphs::Graph {
-        std::vector<smartEdgePtr> edges;
+        std::vector<smartHyperEdgePtr> edges;
+        std::vector<smartHyperVertexPtr> nodes;
     public:
         ~HyperGraph();
 

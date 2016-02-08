@@ -1,0 +1,6 @@
+#ifndef GRAPHS_TYPEDEFS_H
+#define GRAPHS_TYPEDEFS_H
+
+
+
+#endif //GRAPHS_TYPEDEFS_H

@@ -20,6 +20,7 @@ and also to re-familiarize with C++ and learn some of the new features introduce
 - [x] Move vertex & edge data to struct (pimpl)
 - [ ] Subgraph isomorphism
 - [ ] Add Uuids to vertices and edges and use those to check for uniqueness instead of labels
+- [ ] Make sure members are initialized properly
 
 # Notes
 After refactoring the Edge and Vertex classes to hold pairs of Vertices and lists of edges (respectively), some of the derived semantics were broken. The issue comes down to whether it makes sense for vertices to own their originating edges (makes sense for directed graphs), or if they should only know about a list of their neighbors. Either approach works for graphs, but extending the idea to hypergraphs makes it more complicated because hyperedges might need to be able to store a dynamic list of vertices. If we want vertices to hold a list of edges, then this isn't easily adaptable to hypergraphs because of how they interpret directionality. In order to extend this idea to hypergraphs, the Vertex interface should only expose neighbors and not edges.

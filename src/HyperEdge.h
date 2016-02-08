@@ -2,25 +2,29 @@
 #define GRAPHS_HYPEREDGE_H
 
 #include "Edge.h"
+#include "HyperVertex.h"
 #include <vector>
 
 namespace hypergraphs {
+    class HyperVertex;
+
+//    typedef std::vector<HyperVertex> hyperVertexList;
+//    typedef std::unique_ptr<HyperVertex> smartHyperVertexPtr;
+
     class HyperEdge {
         struct EdgeData;
         std::unique_ptr<EdgeData> data;
     public:
-        // Store connected nodes as a vector
+        // Store connected nodes as source and destination vectors
         std::vector<graphs::Vertex*> nodes;
-
-        void init(std::string, int);
+        std::vector<HyperVertex*> sourceNodes;
+        std::vector<HyperVertex*> destinationNodes;
 
         HyperEdge();
-
         HyperEdge(std::string);
-
         HyperEdge(std::string, int);
-
         ~HyperEdge();
+
         HyperEdge(const HyperEdge&);
         HyperEdge& operator=(const HyperEdge&);
 
@@ -28,8 +32,7 @@ namespace hypergraphs {
         void addNode(graphs::Vertex&);
         friend std::ostream& operator<<(std::ostream&, const HyperEdge&);
     };
-    typedef std::unique_ptr<HyperEdge> smartEdgePtr;
-}
 
+}
 
 #endif //GRAPHS_HYPEREDGE_H
