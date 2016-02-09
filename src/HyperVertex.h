@@ -8,26 +8,24 @@
 namespace hypergraphs {
 
     class HyperEdge;
-
     typedef std::vector<HyperEdge> hyperEdgeList;
     typedef std::unique_ptr<HyperEdge> smartHyperEdgePtr;
 
     class HyperVertex {
         struct HyperVertexData;
         std::unique_ptr<HyperVertexData> data;
-        hyperEdgeList sourceEdges;
-        hyperEdgeList destinationEdges;
+        std::vector<HyperEdge*> sourceEdges;
+        std::vector<HyperEdge*> destinationEdges;
     public:
         HyperVertex();
         HyperVertex(std::string);
         ~HyperVertex();
         std::string getLabel() const;
         friend std::ostream& operator<<(std::ostream&, const HyperVertex&);
+
+        void addSourceEdge(HyperEdge&);
+        void addDestinationEdge(HyperEdge&);
     };
-    typedef std::vector<HyperVertex> hyperVertexList;
-    typedef std::unique_ptr<HyperVertex> smartHyperVertexPtr;
-
-
 
 }
 

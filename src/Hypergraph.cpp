@@ -10,56 +10,78 @@ HyperGraph::~HyperGraph() {
 }
 
 void HyperGraph::printGraph() const {
-    std::cout << "Graph:\n";
-    for (auto const& node: nodes) {
-        std::cout << "\t";
-//        std::cout << (*node) << "\n";
+    std::cout << "HyperGraph:\n\tNodes:\n";
+    for (const auto& node: nodes) {
+        std::cout << "\t\t" << (*node) << "\n";
     }
+    std::cout << "\tEdges:\n";
     for (const auto& edge: edges) {
-        std::cout << "\t" << edge.get() << "\n";
+        std::cout << "\t\t" << (*edge) << "\n";
     }
 }
 
-void HyperGraph::addVertex(std::string name) {
-    graphs::Graph::addVertex(name);
+void HyperGraph::addVertex(std::string label) {
+    nodes.push_back(std::make_unique<HyperVertex>(label));
 }
 
-void HyperGraph::addEdge(std::string name) {
-    smartHyperEdgePtr newEdge = std::make_unique<HyperEdge>(name);
-    edges.push_back(std::move(newEdge));
+void HyperGraph::addEdge(std::string label) {
+    edges.push_back(std::make_unique<HyperEdge>(label));
 }
 
-HyperEdge* HyperGraph::getEdge(std::string name) {
+
+
+HyperEdge* HyperGraph::getEdge(std::string label) const {
     for (const auto& edge: edges) {
-        if (edge->getLabel() == name) {
+        if (edge->getLabel() == label) {
             return edge.get();
         }
     }
     return nullptr;
 }
 
-void HyperGraph::addVertexToEdge(std::string vertex_name, std::string edge_name) {
-    // Add the given vertex as a member of the given edge
-    graphs::Vertex* vertex = graphs::Graph::getVertex(vertex_name);
-    HyperEdge* edge = getEdge(edge_name);
-    edge->addNode(*vertex);
+HyperVertex* HyperGraph::getVertex(std::string label) const {
+    for (const auto& node: nodes) {
+        if (node->getLabel() == label) {
+            return node.get();
+        }
+    }
+    return nullptr;
 }
 
-void HyperGraph::addEdgeToVertex(std::string edge_name, std::string vertex_name) {
-    // Mark the given vertex as belonging to the given edge
-    graphs::Vertex* vertex = graphs::Graph::getVertex(vertex_name);
-    HyperEdge* edge = getEdge(edge_name);
-    // TODO: Derive HyperEdge from Edge
-//    vertex->addEdge(*edge);
+void HyperGraph::connectVertices(std::string sourceVertexLabel, std::string destinationVertexLabel, std::string edgeLabel) {
+    HyperVertex* sourceVertex = getVertex(sourceVertexLabel);
+    HyperVertex* destinationVertex = getVertex(destinationVertexLabel);
+    HyperEdge* edge = getEdge(edgeLabel);
+
+    sourceVertex->addDestinationEdge(*edge);
+    edge->addSourceVertex(*sourceVertex);
+    edge->addDestinationVertex(*destinationVertex);
+    destinationVertex->addSourceEdge(*edge);
+
 }
 
-graphs::Vertex* HyperGraph::traverseToVertexBfs(std::string start_name, std::string end_name) {
-    return graphs::Graph::traverseToVertexBfs(start_name, end_name);
-}
+//void HyperGraph::addVertexToEdge(std::string vertex_label, std::string edge_label) {
+//    // Add the given vertex as a member of the given edge
+//    HyperVertex* vertex = getVertex(vertex_label);
+//    HyperEdge* edge = getEdge(edge_label);
+//    edge->addNode(*vertex);
+//}
+
+//void HyperGraph::addEdgeToVertex(std::string edge_label, std::string vertex_label) {
+//    // Mark the given vertex as belonging to the given edge
+//    graphs::Vertex* vertex = graphs::Graph::getVertex(vertex_label);
+//    HyperEdge* edge = getEdge(edge_label);
+//    // TODO: Derive HyperEdge from Edge
+////    vertex->addEdge(*edge);
+//}
+
+//graphs::Vertex* HyperGraph::traverseToVertexBfs(std::string start_label, std::string end_label) {
+//    return graphs::Graph::traverseToVertexBfs(start_label, end_label);
+//}
 
 
-//void HyperGraph::traverseBfs(std::string root_name) {
-//    graphs::smartVertexPtr root_node = getVertex(root_name);
+//void HyperGraph::traverseBfs(std::string root_label) {
+//    graphs::smartVertexPtr root_node = getVertex(root_label);
 //    traverseBfs(root_node);
 //}
 
@@ -68,7 +90,7 @@ graphs::Vertex* HyperGraph::traverseToVertexBfs(std::string start_name, std::str
 //    graphs::Graph::prepareTraverse();
 //    std::queue<graphs::Vertex*> visit_queue;
 //
-//    std::cout << "Hypergraph BFS traversal starting from node " << root->name << ":\n";
+//    std::cout << "Hypergraph BFS traversal starting from node " << root->label << ":\n";
 //
 //    visit_queue.push(&root);
 //
@@ -77,14 +99,14 @@ graphs::Vertex* HyperGraph::traverseToVertexBfs(std::string start_name, std::str
 //        visit_queue.pop();
 //
 //        if (!current->visited) {
-//            std::cout << "\tVisiting vertex: " << current->name << "\n";
+//            std::cout << "\tVisiting vertex: " << current->label << "\n";
 //
 //            for (auto& neighbor: current->neighbors) {
-//                std::cout << "\t\tLooking at neighbor " << neighbor->name << " of node " << current->name <<".\n";
+//                std::cout << "\t\tLooking at neighbor " << neighbor->label << " of node " << current->label <<".\n";
 //                if (neighbor->visited) {
-//                    std::cout << "\t\t\tNeighbor " << neighbor->name << " has already been visited.\n";
+//                    std::cout << "\t\t\tNeighbor " << neighbor->label << " has already been visited.\n";
 //                } else {
-//                    std::cout << "\t\t\tAdding " << neighbor->name << " to the visit queue.\n";
+//                    std::cout << "\t\t\tAdding " << neighbor->label << " to the visit queue.\n";
 //                    // If it's already in the queue, we'll skip it above after we visit it the first time.
 //                    neighbor->previous = current;
 //                    visit_queue.push(neighbor);
@@ -95,6 +117,6 @@ graphs::Vertex* HyperGraph::traverseToVertexBfs(std::string start_name, std::str
 //    }
 //}
 
-void HyperGraph::traverseDfsRecursive(std::string root_name) {
-    graphs::Graph::traverseDfsRecursive(root_name);
-}
+//void HyperGraph::traverseDfsRecursive(std::string root_label) {
+//    graphs::Graph::traverseDfsRecursive(root_label);
+//}

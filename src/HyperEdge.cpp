@@ -12,12 +12,18 @@ struct HyperEdge::EdgeData {
 
 namespace hypergraphs {
     std::ostream &operator<<(std::ostream &strm, const HyperEdge &he) {
-        std::string nodes_str;
-        for (const auto& node: he.nodes) {
-            nodes_str += (*node).getLabel() + ", ";
+        std::string sources, destinations;
+        for (auto const& source: he.sourceNodes) {
+            sources += source->getLabel() + ", ";
         }
-        nodes_str = nodes_str.substr(0, nodes_str.length() - 2);
-        return strm << "Edge: " << he.getLabel() << " (nodes: " << nodes_str << ")";
+        sources = sources.substr(0, sources.length() - 2);
+        for (auto const& destination: he.destinationNodes) {
+            destinations += destination->getLabel() + ", ";
+        }
+        destinations = destinations.substr(0, destinations.length() - 2);
+        return strm << "HyperEdge: " << he.getLabel()
+               << " (source hypervertices: " << sources << ")"
+               << " (destination hypervertices: " << destinations << ")";
     }
 }
 
@@ -51,18 +57,41 @@ HyperEdge& HyperEdge::operator=(const HyperEdge& rhs) {
     return *this;
 }
 
-void HyperEdge::addNode(graphs::Vertex& newNode) {
-    for (auto& node: nodes) {
-        if (!node->isNeighborTo(newNode)) {
-            node->addNeighbor(newNode);
-        }
-        if (!newNode.isNeighborTo(*node)) {
-            newNode.addNeighbor(*node);
-        }
-    }
-    nodes.push_back(&newNode);
-}
+//void HyperEdge::addNode(graphs::Vertex& newNode) {
+//    for (auto& node: nodes) {
+//        if (!node->isNeighborTo(newNode)) {
+//            node->addNeighbor(newNode);
+//        }
+//        if (!newNode.isNeighborTo(*node)) {
+//            newNode.addNeighbor(*node);
+//        }
+//    }
+//    nodes.push_back(&newNode);
+//}
 
 std::string HyperEdge::getLabel() const {
     return data->label;
 }
+
+void HyperEdge::addSourceVertex(HyperVertex& sourceVertex) {
+    bool found = false;
+    for (const auto& node: sourceNodes) {
+        if (node->getLabel() == sourceVertex.getLabel()) {
+            found = true;
+        }
+    }
+    if (!found) {
+        sourceNodes.push_back(&sourceVertex);
+    }
+}
+
+void HyperEdge::addDestinationVertex(HyperVertex& destinationVertex) {
+    bool found = false;
+    for (const auto& node: destinationNodes) {
+        if (node->getLabel() == destinationVertex.getLabel()) {
+            found = true;
+        }
+    }
+    if (!found) {
+        destinationNodes.push_back(&destinationVertex);
+    }}
