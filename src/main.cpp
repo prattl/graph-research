@@ -119,7 +119,7 @@ int main() {
 
 //    hg.traverseBfs("1");
 
-//    hg.traverseDfsRecursive("3");
+    hg.traverseDfsRecursive("1");
 //    hg.traverseDfsIterative("1");
 //    hg.traverseDfsIterativeDeepening("1");
 

@@ -10,9 +10,9 @@ namespace hypergraphs {
     class HyperEdge;
     class HyperVertex;
 
-    typedef std::vector<HyperEdge> hyperEdgeList;
+    typedef std::vector<HyperEdge*> hyperEdgeList;
     typedef std::unique_ptr<HyperEdge> smartHyperEdgePtr;
-    typedef std::vector<HyperVertex> hyperVertexList;
+    typedef std::vector<HyperVertex*> hyperVertexList;
     typedef std::unique_ptr<HyperVertex> smartHyperVertexPtr;
 
 }

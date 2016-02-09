@@ -6,30 +6,33 @@
 #include <memory>
 #include "Graph.h"
 #include "HyperEdge.h"
+#include "HyperVertex.h"
 
 namespace hypergraphs {
     class HyperGraph {
         std::vector<smartHyperEdgePtr> edges;
         std::vector<smartHyperVertexPtr> nodes;
+//        std::vector<std::unique_ptr<HyperVertex>> nodes;
+        void recursiveDfs(const HyperVertex&);
     public:
         ~HyperGraph();
 
         void printGraph() const;
 
-        void addEdge(std::string);
+        void addEdge(const std::string);
         void addVertex(const std::string);
-//        void addVertexToEdge(std::string, std::string);
-//        void addEdgeToVertex(std::string, std::string);
-
-        void connectVertices(std::string, std::string, std::string);
 
         HyperEdge* getEdge(std::string) const;
         HyperVertex* getVertex(std::string) const;
 
-//        graphs::Vertex* traverseToVertexBfs(const std::string, const std::string);
-//        void traverseBfs(std::string);
-//        void traverseBfs(graphs::Vertex&);
-//        void traverseDfsRecursive(const std::string);
+        void connectVertices(HyperVertex&, HyperVertex&, HyperEdge&);
+        void connectVertices(std::string, std::string, std::string);
+
+        void prepareForTraversal() const;
+
+        void traverseDfsRecursive(const std::string);
+        void traverseDfsRecursive(const HyperVertex&);
+
     };
 
 }

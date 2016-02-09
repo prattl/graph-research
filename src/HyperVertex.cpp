@@ -36,6 +36,18 @@ HyperVertex::HyperVertex(std::string label) :
 
 HyperVertex::~HyperVertex() = default;
 
+void HyperVertex::visit() const {
+    data->visited = true;
+}
+
+void HyperVertex::unVisit() const {
+    data->visited = false;
+}
+
+bool HyperVertex::isVisited() const {
+    return data->visited;
+}
+
 std::string HyperVertex::getLabel() const {
     return data->label;
 }

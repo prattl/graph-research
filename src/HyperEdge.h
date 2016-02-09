@@ -10,9 +10,10 @@ namespace hypergraphs {
     class HyperEdge {
         struct EdgeData;
         std::unique_ptr<EdgeData> data;
+
+    public:
         std::vector<HyperVertex*> sourceNodes;
         std::vector<HyperVertex*> destinationNodes;
-    public:
         // Store connected nodes as source and destination vectors
         std::vector<graphs::Vertex*> nodes;
 
@@ -32,7 +33,7 @@ namespace hypergraphs {
         void addDestinationVertex(HyperVertex&);
     };
 
-    typedef std::vector<HyperEdge> hyperEdgeList;
+    typedef std::vector<HyperEdge*> hyperEdgeList;
     typedef std::unique_ptr<HyperEdge> smartHyperEdgePtr;
 
 }

@@ -20,11 +20,11 @@ void HyperGraph::printGraph() const {
     }
 }
 
-void HyperGraph::addVertex(std::string label) {
+void HyperGraph::addVertex(const std::string label) {
     nodes.push_back(std::make_unique<HyperVertex>(label));
 }
 
-void HyperGraph::addEdge(std::string label) {
+void HyperGraph::addEdge(const std::string label) {
     edges.push_back(std::make_unique<HyperEdge>(label));
 }
 
@@ -48,16 +48,50 @@ HyperVertex* HyperGraph::getVertex(std::string label) const {
     return nullptr;
 }
 
+void HyperGraph::connectVertices(HyperVertex& sourceVertex, HyperVertex& destinationVertex, HyperEdge& edge) {
+    sourceVertex.addDestinationEdge(edge);
+    edge.addSourceVertex(sourceVertex);
+    edge.addDestinationVertex(destinationVertex);
+    destinationVertex.addSourceEdge(edge);
+}
+
 void HyperGraph::connectVertices(std::string sourceVertexLabel, std::string destinationVertexLabel, std::string edgeLabel) {
     HyperVertex* sourceVertex = getVertex(sourceVertexLabel);
     HyperVertex* destinationVertex = getVertex(destinationVertexLabel);
     HyperEdge* edge = getEdge(edgeLabel);
+    connectVertices(*sourceVertex, *destinationVertex, *edge);
+}
 
-    sourceVertex->addDestinationEdge(*edge);
-    edge->addSourceVertex(*sourceVertex);
-    edge->addDestinationVertex(*destinationVertex);
-    destinationVertex->addSourceEdge(*edge);
+void HyperGraph::prepareForTraversal() const {
+    // Prepare for a new traversal by marking all nodes as unvisited.
+    for (auto& node: nodes) {
+        node->unVisit();
+    }
+}
 
+void HyperGraph::traverseDfsRecursive(const std::string startingNodeLabel) {
+    HyperVertex* startingNode = getVertex(startingNodeLabel);
+    traverseDfsRecursive(*startingNode);
+}
+
+void HyperGraph::recursiveDfs(const HyperVertex& node) {
+    if (!node.isVisited()) {}
+    node.visit();
+    std::cout << "\tVisiting node " << node.getLabel() << "\n";
+    for (auto& edge: node.destinationEdges) {
+        for (auto& neighbor: edge->destinationNodes) {
+            if (!neighbor->isVisited()) {
+                recursiveDfs(*neighbor);
+            }
+        }
+    }
+}
+
+void HyperGraph::traverseDfsRecursive(const HyperVertex& startingNode) {
+    // Traverse the entire hypergraph beginning from the startingNode
+    prepareForTraversal();
+    std::cout << "Recursive DFS traversal starting from node " << startingNode.getLabel() << ":\n";
+    recursiveDfs(startingNode);
 }
 
 //void HyperGraph::addVertexToEdge(std::string vertex_label, std::string edge_label) {
