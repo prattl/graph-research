@@ -1,8 +1,6 @@
 #include <iostream>
 #include "Graph.h"
 #include "Hypergraph.h"
-#include <stack>
-
 using namespace std;
 
 int main() {

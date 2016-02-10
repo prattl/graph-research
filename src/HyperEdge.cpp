@@ -1,11 +1,13 @@
 #include "HyperEdge.h"
 #include <iostream>
-#include "Vertex.h"
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 using namespace hypergraphs;
 
-struct HyperEdge::EdgeData {
-    std::string uuid;
+struct HyperEdge::HyperEdgeData {
+    boost::uuids::uuid uuid;
     std::string label;
     int weight;
 };
@@ -21,29 +23,28 @@ namespace hypergraphs {
             destinations += destination->getLabel() + ", ";
         }
         destinations = destinations.substr(0, destinations.length() - 2);
-        return strm << "HyperEdge: " << he.getLabel()
+        return strm << "HyperEdge (" << he.data->uuid << "): " << he.getLabel()
                << " (source hypervertices: " << sources << ")"
                << " (destination hypervertices: " << destinations << ")";
     }
 }
 
 HyperEdge::HyperEdge() :
-    data(std::make_unique<EdgeData>(EdgeData{"", "", 0})) {};
+    data(std::make_unique<HyperEdgeData>(HyperEdgeData{boost::uuids::random_generator()(), "", 0})) {};
 
 HyperEdge::HyperEdge(std::string label) :
-    data(std::make_unique<EdgeData>(EdgeData{"", label, 0})) {};
+    data(std::make_unique<HyperEdgeData>(HyperEdgeData{boost::uuids::random_generator()(), label, 0})) {};
 
 HyperEdge::HyperEdge(std::string label, int weight) :
-    data(std::make_unique<EdgeData>(EdgeData{"", label, weight})) {};
+    data(std::make_unique<HyperEdgeData>(HyperEdgeData{boost::uuids::random_generator()(), label, weight})) {};
 
 HyperEdge::~HyperEdge() = default;
-
 
 // Not used yet but this is how it would be implemented
 HyperEdge::HyperEdge(const HyperEdge& rhs) : data(nullptr) {
     std::cout << "Copy constructor called for " << data->label << " with rhs " << rhs.data->label << "\n";
     if (rhs.data) {
-        data = std::make_unique<EdgeData>(*rhs.data);
+        data = std::make_unique<HyperEdgeData>(*rhs.data);
     }
 }
 
@@ -51,23 +52,11 @@ HyperEdge::HyperEdge(const HyperEdge& rhs) : data(nullptr) {
 HyperEdge& HyperEdge::operator=(const HyperEdge& rhs) {
     std::cout << "Assignment operator called for " << data->label << " with rhs " << rhs.data->label << "\n";
     if (rhs.data) data.reset();
-    else if (!data) data = std::make_unique<EdgeData>(*rhs.data);
+    else if (!data) data = std::make_unique<HyperEdgeData>(*rhs.data);
     else *data = *rhs.data;
 
     return *this;
 }
-
-//void HyperEdge::addNode(graphs::Vertex& newNode) {
-//    for (auto& node: nodes) {
-//        if (!node->isNeighborTo(newNode)) {
-//            node->addNeighbor(newNode);
-//        }
-//        if (!newNode.isNeighborTo(*node)) {
-//            newNode.addNeighbor(*node);
-//        }
-//    }
-//    nodes.push_back(&newNode);
-//}
 
 std::string HyperEdge::getLabel() const {
     return data->label;

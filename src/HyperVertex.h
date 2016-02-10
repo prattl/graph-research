@@ -34,6 +34,8 @@ namespace hypergraphs {
         friend std::ostream& operator<<(std::ostream&, const HyperVertex&);
     };
 
+    typedef std::vector<HyperVertex*> hyperVertexList;
+
 }
 
 #endif //GRAPHS_HYPERVERTEX_H

@@ -1,12 +1,14 @@
 #include "HyperVertex.h"
 #include <memory>
 #include <iostream>
-
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 using namespace hypergraphs;
 
 struct HyperVertex::HyperVertexData {
-    std::string uuid;
+    boost::uuids::uuid uuid;
     std::string label;
     bool visited;
 };
@@ -22,17 +24,17 @@ namespace hypergraphs {
             destinations += destination->getLabel() + ", ";
         }
         destinations = destinations.substr(0, destinations.length() - 2);
-        return strm << "HyperVertex: " << hv.getLabel()
+        return strm << "HyperVertex (" << hv.data->uuid << "): " << hv.getLabel()
                << " (source hyperedges: " << sources << ")"
                << " (destination hyperedges: " << destinations << ")";
     }
 }
 
 HyperVertex::HyperVertex() :
-        data(std::make_unique<HyperVertexData>(HyperVertexData{"", ""})) {};
+        data(std::make_unique<HyperVertexData>(HyperVertexData{boost::uuids::random_generator()(), ""})) {};
 
 HyperVertex::HyperVertex(std::string label) :
-        data(std::make_unique<HyperVertexData>(HyperVertexData{"", label})) {};
+        data(std::make_unique<HyperVertexData>(HyperVertexData{boost::uuids::random_generator()(), label})) {};
 
 HyperVertex::~HyperVertex() = default;
 
