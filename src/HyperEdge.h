@@ -13,7 +13,7 @@ namespace hypergraphs {
 
     public:
         hyperVertexList sourceNodes;
-        std::vector<HyperVertex*> destinationNodes;
+        hyperVertexList destinationNodes;
 
         HyperEdge();
         HyperEdge(std::string);
@@ -24,10 +24,11 @@ namespace hypergraphs {
         HyperEdge& operator=(const HyperEdge&);
 
         std::string getLabel() const;
-        friend std::ostream& operator<<(std::ostream&, const HyperEdge&);
 
         void addSourceVertex(HyperVertex&);
         void addDestinationVertex(HyperVertex&);
+
+        friend std::ostream& operator<<(std::ostream&, const HyperEdge&);
     };
 
     typedef std::vector<HyperEdge*> hyperEdgeList;

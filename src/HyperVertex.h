@@ -4,6 +4,7 @@
 #include <vector>
 #include "HyperEdge.h"
 #include <iostream>
+#include <boost/uuid/uuid.hpp>
 
 namespace hypergraphs {
 
@@ -16,8 +17,8 @@ namespace hypergraphs {
         std::unique_ptr<HyperVertexData> data;
 
     public:
-        std::vector<HyperEdge*> sourceEdges;
-        std::vector<HyperEdge*> destinationEdges;
+        hyperEdgeList sourceEdges;
+        hyperEdgeList destinationEdges;
 
         HyperVertex();
         HyperVertex(std::string);
@@ -27,6 +28,7 @@ namespace hypergraphs {
         void unVisit() const;
         bool isVisited() const;
         std::string getLabel() const;
+        boost::uuids::uuid getUuid() const;
 
         void addSourceEdge(HyperEdge&);
         void addDestinationEdge(HyperEdge&);
@@ -35,7 +37,7 @@ namespace hypergraphs {
     };
 
     typedef std::vector<HyperVertex*> hyperVertexList;
-
+    typedef std::unique_ptr<HyperVertex> smartHyperVertexPtr;
 }
 
 #endif //GRAPHS_HYPERVERTEX_H

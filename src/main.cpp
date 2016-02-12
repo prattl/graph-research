@@ -115,11 +115,14 @@ int main() {
     hg.connectVertices("7", "3", "c");
     hg.connectVertices("7", "4", "c");
 
-//    hg.traverseBfs("1");
+//    hg.traverseDfsRecursive("1");
 
-    hg.traverseDfsRecursive("1");
-//    hg.traverseDfsIterative("1");
-//    hg.traverseDfsIterativeDeepening("1");
+    hypergraphs::HyperGraph hg2;
+    hg2.addVertex("3");
+    hg2.addVertex("4");
+    hg2.addVertex("5");
+
+    hg.findIsomorphism(hg2);
 
     hg.printGraph();
 

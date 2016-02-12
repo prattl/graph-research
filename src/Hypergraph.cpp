@@ -94,6 +94,106 @@ void HyperGraph::traverseDfsRecursive(const HyperVertex& startingNode) {
     recursiveDfs(startingNode);
 }
 
+
+isomorphMapping HyperGraph::findIsomorphism(HyperGraph& query) {
+    std::cout << "findIsomorphism()\n";
+    isomorphMapping assignments; // Mapping of query to data nodes
+
+    // Make sure each query node can map to a data graph node
+    for (const auto& node: query.nodes) {
+        hyperVertexList candidates = filterCandidates(query, (*node.get()));
+        if (candidates.empty()) {
+            std::cout << "No candidates found for node " << node->getLabel() << ". Cannot find an isomorphism.\n";
+            return assignments;
+        }
+    }
+
+    std::cout << "Found a candidate for each query vertex. Beginning subgraphSearch.\n";
+
+    subgraphSearch(query, assignments);
+
+    return assignments;
+}
+
+bool HyperGraph::subgraphSearch(HyperGraph& query, isomorphMapping& assignments) {
+    std::cout << "subgraphSearch():\n";
+
+    if (assignments.size() == query.nodes.size()) {
+        std::cout << "\tAll nodes have been matched. Returning true.\n";
+        return true;
+    }
+
+    // Go through all nodes and give them assignments
+    HyperVertex* nextVertex = nextQueryVertex(query, assignments);
+    std::cout << "\tLooking at vertex: " << *nextVertex << "\n";
+
+    hyperVertexList refinedCandidates = refineCandidates(query, assignments, *nextVertex);
+
+    for (auto& candidate: refinedCandidates) {
+        std::cout << "\t\tComparing to candidate: " << *candidate << ".\n";
+        // TODO: Only check candidates that have not been matched
+        bool joinable = isJoinable(query, assignments, *nextVertex, *candidate);
+        std::cout << "\t\t\tCandidate is joinable: " << joinable << ".\n";
+        if (joinable) {
+            assignments.push_back(vertexMapping(nextVertex, candidate));
+            subgraphSearch(query, assignments);
+
+            // Remove the mapping from assignments
+            int i = 0;
+            for (auto& mapping: assignments) {
+                i++;
+                if (mapping.first->getUuid() == nextVertex->getUuid()) {
+                    break;
+                }
+            }
+            assignments.erase(assignments.begin() + i);
+        }
+    }
+}
+
+hyperVertexList HyperGraph::filterCandidates(const HyperGraph& query, const HyperVertex& queryNode) const {
+    // Return list of vertices of this hypergraph which have a matching label of the passed query graph node
+    hyperVertexList candidates;
+    std::cout << "\tFiltering candidates for: " << queryNode.getLabel() << "\n";
+    for (const auto& potentialCandidate: nodes) {
+        if (potentialCandidate->getLabel() == queryNode.getLabel()) {
+            candidates.push_back(potentialCandidate.get());
+            std::cout << "\t\tAdding candidate: " << (*potentialCandidate.get()) << "\n";
+        }
+    }
+    return candidates;
+}
+
+HyperVertex* HyperGraph::nextQueryVertex(HyperGraph& query, isomorphMapping& assignments) {
+    // Return the next vertex of the query which has not been assigned
+    for (auto& node: query.nodes) {
+//        if (std::find(assignments.begin(), assignments.end(), node.get()) == assignments.end()) {
+        auto nextVertex = std::find_if(assignments.begin(), assignments.end(),
+                                       [&](auto& mapping){ return mapping.first == node.get();} );
+//        for (auto &mapping: assignments) {
+        if (nextVertex == assignments.end()) {
+            // Vertex was not found in assignments, so we can return it
+            std::cout << "\tSelected nextQueryVertex: " << *(node.get()) << ".\n";
+            return node.get();
+        }
+    }
+
+    std::cout << "\tWas not able to select an unassigned query vertex.\n";
+    return nullptr;
+}
+
+hyperVertexList HyperGraph::refineCandidates(const HyperGraph& query,
+                                             isomorphMapping& assignments,
+                                             const HyperVertex& queryNode) {
+    // For the simplest version of this algorithm, don't do any refinements Just treat all candidates as possibilities.
+    return filterCandidates(query, queryNode);
+}
+
+bool HyperGraph::isJoinable(const HyperGraph& query, isomorphMapping& assignments, HyperVertex& queryNode, HyperVertex& dataNode) {
+    // TODO: Make sure edges match
+    return true;
+}
+
 //void HyperGraph::addVertexToEdge(std::string vertex_label, std::string edge_label) {
 //    // Add the given vertex as a member of the given edge
 //    HyperVertex* vertex = getVertex(vertex_label);

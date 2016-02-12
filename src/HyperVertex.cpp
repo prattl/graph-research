@@ -54,6 +54,10 @@ std::string HyperVertex::getLabel() const {
     return data->label;
 }
 
+boost::uuids::uuid HyperVertex::getUuid() const {
+    return data->uuid;
+}
+
 void HyperVertex::addSourceEdge(HyperEdge& edge) {
     bool found = false;
     for (const auto& destinationEdge: sourceEdges) {
