@@ -112,11 +112,6 @@ isomorphism HyperGraph::findIsomorphism(HyperGraph& query) {
 
     subgraphSearch(query, assignments);
 
-    std::cout << "Found an isomorphism: \nQuery Vertex :: Data Vertex\n";
-    for (auto& mapping: assignments) {
-        std::cout << *(mapping.first) << " :: " << *(mapping.second) << "\n";
-    }
-
     return assignments;
 }
 
@@ -130,13 +125,11 @@ bool HyperGraph::subgraphSearch(HyperGraph& query, isomorphism& assignments) {
 
     // Go through all nodes and give them assignments
     HyperVertex* nextVertex = nextQueryVertex(query, assignments);
-//    std::cout << "\tLooking at vertex: " << *nextVertex << "\n";
 
     hyperVertexList refinedCandidates = refineCandidates(query, assignments, *nextVertex);
 
     for (auto& candidate: refinedCandidates) {
         std::cout << "\t\tComparing to candidate: " << *candidate << ".\n";
-        // TODO: Only check candidates that have not been matched
         bool joinable = isJoinable(query, assignments, *nextVertex, *candidate);
         if (joinable) {
             std::cout << "\t\t\tnextQueryVertex is joinable to data node candidate.\n";
@@ -144,14 +137,15 @@ bool HyperGraph::subgraphSearch(HyperGraph& query, isomorphism& assignments) {
             subgraphSearch(query, assignments);
 
             // Remove the mapping from assignments
-//            int i = 0;
-//            for (auto& mapping: assignments) {
-//                i++;
-//                if (mapping.first->getUuid() == nextVertex->getUuid()) {
-//                    break;
-//                }
-//            }
-//            assignments.erase(assignments.begin() + i);
+            // TODO: There has to be an easier way to remove this...
+            int i = 0;
+            for (auto& mapping: assignments) {
+                i++;
+                if (mapping.first->getUuid() == nextVertex->getUuid()) {
+                    break;
+                }
+            }
+            assignments.erase(assignments.begin() + i);
         } else {
             std::cout << "\t\t\tnextQueryVertex is not joinable to data node candidate.\n";
         }
@@ -174,10 +168,8 @@ hyperVertexList HyperGraph::filterCandidates(const HyperGraph& query, const Hype
 HyperVertex* HyperGraph::nextQueryVertex(HyperGraph& query, isomorphism& assignments) {
     // Return the next vertex of the query which has not been assigned
     for (auto& node: query.nodes) {
-//        if (std::find(assignments.begin(), assignments.end(), node.get()) == assignments.end()) {
         auto nextVertex = std::find_if(assignments.begin(), assignments.end(),
                                        [&](auto& mapping){ return mapping.first == node.get();} );
-//        for (auto &mapping: assignments) {
         if (nextVertex == assignments.end()) {
             // Vertex was not found in assignments, so we can return it
             std::cout << "\tSelected nextQueryVertex: " << *(node.get()) << ".\n";
