@@ -115,10 +115,7 @@ int main() {
     hg.connectVertices("7", "3", "c");
     hg.connectVertices("7", "4", "c");
 
-//    hg.traverseDfsRecursive("1");
-
     hg.printGraph();
-
 
     hypergraphs::HyperGraph hg2;
     hg2.addVertex("1");
@@ -127,17 +124,30 @@ int main() {
 
     hg2.addEdge("a");
     hg2.addEdge("b");
-//    hg2.addEdge("x");
 
     hg2.connectVertices("1", "3", "a");
     hg2.connectVertices("1", "5", "b");
     hg2.connectVertices("3", "5", "b");
-//    hg2.connectVertices("3", "5", "x");
 
+    hypergraphs::HyperGraph hg3;
+    hg3.addVertex("1");
+    hg3.addVertex("3");
+    hg3.addVertex("5");
 
+    hg3.addEdge("a");
+    hg3.addEdge("b");
+    hg3.addEdge("x");
 
-    hypergraphs::isomorphism iso = hg.findIsomorphism(hg2); // Vector of HyperVertex pairs (query, data)
+    hg3.connectVertices("1", "3", "a");
+    hg3.connectVertices("1", "5", "b");
+    hg3.connectVertices("3", "5", "b");
+    hg3.connectVertices("3", "5", "x");
 
+    // Should find an isomorphism:
+    hypergraphs::isomorphism iso1 = hg.findIsomorphism(hg2);
+
+    // Shouldn't find an isomorphism (data graph does not have an edge "x"):
+    hypergraphs::isomorphism iso2 = hg.findIsomorphism(hg3);
 
     return 0;
 }
