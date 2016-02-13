@@ -9,8 +9,8 @@
 namespace hypergraphs {
 
     class HyperEdge;
-    typedef std::vector<HyperEdge*> hyperEdgeList;
-    typedef std::unique_ptr<HyperEdge> smartHyperEdgePtr;
+    using hyperEdgeList = std::vector<HyperEdge*>;
+    using smartHyperEdgePtr = std::unique_ptr<HyperEdge>;
 
     class HyperVertex {
         struct HyperVertexData;
@@ -36,8 +36,8 @@ namespace hypergraphs {
         friend std::ostream& operator<<(std::ostream&, const HyperVertex&);
     };
 
-    typedef std::vector<HyperVertex*> hyperVertexList;
-    typedef std::unique_ptr<HyperVertex> smartHyperVertexPtr;
+    using hyperVertexList = std::vector<HyperVertex*>;
+    using smartHyperVertexPtr = std::unique_ptr<HyperVertex>;
 }
 
 #endif //GRAPHS_HYPERVERTEX_H

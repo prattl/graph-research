@@ -31,8 +31,8 @@ namespace hypergraphs {
         friend std::ostream& operator<<(std::ostream&, const HyperEdge&);
     };
 
-    typedef std::vector<HyperEdge*> hyperEdgeList;
-    typedef std::unique_ptr<HyperEdge> smartHyperEdgePtr;
+    using hyperEdgeList = std::vector<HyperEdge*>;
+    using smartHyperEdgePtr = std::unique_ptr<HyperEdge>;
 
 }
 
