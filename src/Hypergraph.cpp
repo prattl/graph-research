@@ -95,9 +95,9 @@ void HyperGraph::traverseDfsRecursive(const HyperVertex& startingNode) {
 }
 
 
-isomorphMapping HyperGraph::findIsomorphism(HyperGraph& query) {
+isomorphism HyperGraph::findIsomorphism(HyperGraph& query) {
     std::cout << "findIsomorphism()\n";
-    isomorphMapping assignments; // Mapping of query to data nodes
+    isomorphism assignments; // Mapping of query to data nodes
 
     // Make sure each query node can map to a data graph node
     for (const auto& node: query.nodes) {
@@ -112,10 +112,15 @@ isomorphMapping HyperGraph::findIsomorphism(HyperGraph& query) {
 
     subgraphSearch(query, assignments);
 
+    std::cout << "Found an isomorphism: \nQuery Vertex :: Data Vertex\n";
+    for (auto& mapping: assignments) {
+        std::cout << *(mapping.first) << " :: " << *(mapping.second) << "\n";
+    }
+
     return assignments;
 }
 
-bool HyperGraph::subgraphSearch(HyperGraph& query, isomorphMapping& assignments) {
+bool HyperGraph::subgraphSearch(HyperGraph& query, isomorphism& assignments) {
     std::cout << "subgraphSearch():\n";
 
     if (assignments.size() == query.nodes.size()) {
@@ -125,7 +130,7 @@ bool HyperGraph::subgraphSearch(HyperGraph& query, isomorphMapping& assignments)
 
     // Go through all nodes and give them assignments
     HyperVertex* nextVertex = nextQueryVertex(query, assignments);
-    std::cout << "\tLooking at vertex: " << *nextVertex << "\n";
+//    std::cout << "\tLooking at vertex: " << *nextVertex << "\n";
 
     hyperVertexList refinedCandidates = refineCandidates(query, assignments, *nextVertex);
 
@@ -133,20 +138,22 @@ bool HyperGraph::subgraphSearch(HyperGraph& query, isomorphMapping& assignments)
         std::cout << "\t\tComparing to candidate: " << *candidate << ".\n";
         // TODO: Only check candidates that have not been matched
         bool joinable = isJoinable(query, assignments, *nextVertex, *candidate);
-        std::cout << "\t\t\tCandidate is joinable: " << joinable << ".\n";
         if (joinable) {
+            std::cout << "\t\t\tnextQueryVertex is joinable to data node candidate.\n";
             assignments.push_back(vertexMapping(nextVertex, candidate));
             subgraphSearch(query, assignments);
 
             // Remove the mapping from assignments
-            int i = 0;
-            for (auto& mapping: assignments) {
-                i++;
-                if (mapping.first->getUuid() == nextVertex->getUuid()) {
-                    break;
-                }
-            }
-            assignments.erase(assignments.begin() + i);
+//            int i = 0;
+//            for (auto& mapping: assignments) {
+//                i++;
+//                if (mapping.first->getUuid() == nextVertex->getUuid()) {
+//                    break;
+//                }
+//            }
+//            assignments.erase(assignments.begin() + i);
+        } else {
+            std::cout << "\t\t\tnextQueryVertex is not joinable to data node candidate.\n";
         }
     }
 }
@@ -154,7 +161,7 @@ bool HyperGraph::subgraphSearch(HyperGraph& query, isomorphMapping& assignments)
 hyperVertexList HyperGraph::filterCandidates(const HyperGraph& query, const HyperVertex& queryNode) const {
     // Return list of vertices of this hypergraph which have a matching label of the passed query graph node
     hyperVertexList candidates;
-    std::cout << "\tFiltering candidates for: " << queryNode.getLabel() << "\n";
+    std::cout << "\tFiltering candidates for query node: " << queryNode.getLabel() << "\n";
     for (const auto& potentialCandidate: nodes) {
         if (potentialCandidate->getLabel() == queryNode.getLabel()) {
             candidates.push_back(potentialCandidate.get());
@@ -164,7 +171,7 @@ hyperVertexList HyperGraph::filterCandidates(const HyperGraph& query, const Hype
     return candidates;
 }
 
-HyperVertex* HyperGraph::nextQueryVertex(HyperGraph& query, isomorphMapping& assignments) {
+HyperVertex* HyperGraph::nextQueryVertex(HyperGraph& query, isomorphism& assignments) {
     // Return the next vertex of the query which has not been assigned
     for (auto& node: query.nodes) {
 //        if (std::find(assignments.begin(), assignments.end(), node.get()) == assignments.end()) {
@@ -183,14 +190,39 @@ HyperVertex* HyperGraph::nextQueryVertex(HyperGraph& query, isomorphMapping& ass
 }
 
 hyperVertexList HyperGraph::refineCandidates(const HyperGraph& query,
-                                             isomorphMapping& assignments,
+                                             isomorphism& assignments,
                                              const HyperVertex& queryNode) {
     // For the simplest version of this algorithm, don't do any refinements Just treat all candidates as possibilities.
     return filterCandidates(query, queryNode);
 }
 
-bool HyperGraph::isJoinable(const HyperGraph& query, isomorphMapping& assignments, HyperVertex& queryNode, HyperVertex& dataNode) {
-    // TODO: Make sure edges match
+bool HyperGraph::isJoinable(const HyperGraph& query, isomorphism& assignments,
+                            HyperVertex& queryNode, HyperVertex& dataNode) {
+    std::cout << "\t\t\tChecking if query node " << queryNode.getLabel() << " is joinable to data node " <<
+            dataNode.getLabel() << ":\n";
+    for (const auto& sourceQueryEdge: queryNode.sourceEdges) {
+        std::cout << "\t\t\t\tLooking at source query edge: " << sourceQueryEdge->getLabel() << "\n";
+        // Make sure each sourceQueryEdge has a corresponding source edge in the dataNode
+        auto foundSourceEdge = std::find_if(dataNode.sourceEdges.begin(), dataNode.sourceEdges.end(),
+                                            [&](auto& edge){ return edge->getLabel() == sourceQueryEdge->getLabel();} );
+        if (foundSourceEdge == dataNode.sourceEdges.end()) {
+            // Did not find a corresponding edge.
+            std::cout << "\t\t\t\tDid not find an edge mapping for query source edge: " << sourceQueryEdge->getLabel() << "\n";
+            return false;
+        }
+    }
+    for (const auto& destinationQueryEdge: queryNode.destinationEdges) {
+        std::cout << "\t\t\t\tLooking at destination query edge: " << destinationQueryEdge->getLabel() << "\n";
+        // Make sure each sourceQueryEdge has a corresponding destination edge in the dataNode
+        auto foundDestinationEdge = std::find_if(dataNode.destinationEdges.begin(), dataNode.destinationEdges.end(),
+                                            [&](auto& edge){ return edge->getLabel() == destinationQueryEdge->getLabel();} );
+        if (foundDestinationEdge == dataNode.destinationEdges.end()) {
+            // Did not find a corresponding edge.
+            std::cout << "\t\t\t\tDid not find an edge mapping for query destination edge: " << destinationQueryEdge->getLabel() << "\n";
+            return false;
+        }
+    }
+
     return true;
 }
 

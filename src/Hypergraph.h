@@ -10,18 +10,18 @@
 
 namespace hypergraphs {
     using vertexMapping = std::pair<HyperVertex*, HyperVertex*>;
-    using isomorphMapping = std::vector<vertexMapping>;
+    using isomorphism = std::vector<vertexMapping>;
     class HyperGraph {
 
         std::vector<smartHyperEdgePtr> edges;
         std::vector<smartHyperVertexPtr> nodes;
 
         void recursiveDfs(const HyperVertex &);
-        bool subgraphSearch(HyperGraph&, isomorphMapping&);
+        bool subgraphSearch(HyperGraph&, isomorphism&);
         hyperVertexList filterCandidates(const HyperGraph&, const HyperVertex&) const;
-        HyperVertex* nextQueryVertex(HyperGraph&, isomorphMapping&);
-        hyperVertexList refineCandidates(const HyperGraph&, isomorphMapping&, const HyperVertex&);
-        bool isJoinable(const HyperGraph&, isomorphMapping&,
+        HyperVertex* nextQueryVertex(HyperGraph&, isomorphism&);
+        hyperVertexList refineCandidates(const HyperGraph&, isomorphism&, const HyperVertex&);
+        bool isJoinable(const HyperGraph&, isomorphism&,
                         HyperVertex&, HyperVertex&);
     public:
         ~HyperGraph();
@@ -46,7 +46,7 @@ namespace hypergraphs {
 
         void traverseDfsRecursive(const HyperVertex &);
 
-        isomorphMapping findIsomorphism(HyperGraph&);
+        isomorphism findIsomorphism(HyperGraph&);
 
     };
 }

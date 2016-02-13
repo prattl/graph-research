@@ -17,8 +17,8 @@ namespace hypergraphs {
         std::unique_ptr<HyperVertexData> data;
 
     public:
-        hyperEdgeList sourceEdges;
-        hyperEdgeList destinationEdges;
+        hyperEdgeList sourceEdges;      // Edges that point to this node
+        hyperEdgeList destinationEdges; // Edges that originate from this node
 
         HyperVertex();
         HyperVertex(std::string);

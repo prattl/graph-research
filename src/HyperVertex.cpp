@@ -14,7 +14,7 @@ struct HyperVertex::HyperVertexData {
 };
 
 namespace hypergraphs {
-    std::ostream &operator<<(std::ostream &strm, const HyperVertex &hv) {
+    std::ostream &operator<<(std::ostream& strm, const HyperVertex& hv) {
         std::string sources, destinations;
         for (auto const& source: hv.sourceEdges) {
             sources += source->getLabel() + ", ";
@@ -24,7 +24,7 @@ namespace hypergraphs {
             destinations += destination->getLabel() + ", ";
         }
         destinations = destinations.substr(0, destinations.length() - 2);
-        return strm << "HyperVertex (" << hv.data->uuid << "): " << hv.getLabel()
+        return strm << "HyperVertex " << hv.getLabel() << " (" << hv.data->uuid << "): "
                << " (source hyperedges: " << sources << ")"
                << " (destination hyperedges: " << destinations << ")";
     }

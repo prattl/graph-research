@@ -117,14 +117,27 @@ int main() {
 
 //    hg.traverseDfsRecursive("1");
 
+    hg.printGraph();
+
+
     hypergraphs::HyperGraph hg2;
+    hg2.addVertex("1");
     hg2.addVertex("3");
-    hg2.addVertex("4");
     hg2.addVertex("5");
 
-    hg.findIsomorphism(hg2);
+    hg2.addEdge("a");
+    hg2.addEdge("b");
+//    hg2.addEdge("x");
 
-    hg.printGraph();
+    hg2.connectVertices("1", "3", "a");
+    hg2.connectVertices("1", "5", "b");
+    hg2.connectVertices("3", "5", "b");
+//    hg2.connectVertices("3", "5", "x");
+
+
+
+    hypergraphs::isomorphism iso = hg.findIsomorphism(hg2); // Vector of HyperVertex pairs (query, data)
+
 
     return 0;
 }
