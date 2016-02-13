@@ -1,0 +1,86 @@
+/home/lenny/.CLion12/system/cmake/generated/e2ba363f/e2ba363f/Debug/graphs
+================== GRAPHS ==================
+================== HYPERGRAPHS ==================
+HyperGraph:
+	Nodes:
+		HyperVertex 1 (ce16b77d-7237-42f3-b369-042f142d9699):  (source hyperedges: ) (destination hyperedges: a, b)
+		HyperVertex 2 (5f1e104c-9609-4b20-9ccc-6e5dbea15494):  (source hyperedges: ) (destination hyperedges: a)
+		HyperVertex 3 (f36808fe-8010-4ebe-8833-8b346b471374):  (source hyperedges: a, c) (destination hyperedges: b)
+		HyperVertex 4 (cab94409-af0e-49c6-9ba3-444b5fa89da6):  (source hyperedges: a, c) (destination hyperedges: )
+		HyperVertex 5 (f37de700-6b73-462e-8508-0a97e7bd106f):  (source hyperedges: b) (destination hyperedges: d)
+		HyperVertex 6 (40f03286-d178-4645-b52d-9fd32b88ad14):  (source hyperedges: d) (destination hyperedges: )
+		HyperVertex 7 (99eadddb-5e2d-40e2-954a-905eaa86dd2d):  (source hyperedges: d) (destination hyperedges: c)
+	Edges:
+		HyperEdge (715e9f73-e535-4265-996e-e973deb265de): a (source hypervertices: 1, 2) (destination hypervertices: 3, 4)
+		HyperEdge (3a4da5bc-9780-44a1-9694-3b668148d415): b (source hypervertices: 1, 3) (destination hypervertices: 5)
+		HyperEdge (0cb985dd-85c3-48c6-88c9-ed85e87282d8): c (source hypervertices: 7) (destination hypervertices: 3, 4)
+		HyperEdge (86975bac-aef5-41c1-9fbf-57fb56108e3e): d (source hypervertices: 5) (destination hypervertices: 6, 7)
+findIsomorphism()
+	Filtering candidates for query node: 1
+		Adding candidate: HyperVertex 1 (ce16b77d-7237-42f3-b369-042f142d9699):  (source hyperedges: ) (destination hyperedges: a, b)
+	Filtering candidates for query node: 3
+		Adding candidate: HyperVertex 3 (f36808fe-8010-4ebe-8833-8b346b471374):  (source hyperedges: a, c) (destination hyperedges: b)
+	Filtering candidates for query node: 5
+		Adding candidate: HyperVertex 5 (f37de700-6b73-462e-8508-0a97e7bd106f):  (source hyperedges: b) (destination hyperedges: d)
+Found a candidate for each query vertex. Beginning subgraphSearch.
+subgraphSearch():
+	Selected nextQueryVertex: HyperVertex 1 (917b917e-82ce-4d7c-bbc0-1b5d49dc4e16):  (source hyperedges: ) (destination hyperedges: a, b).
+	Filtering candidates for query node: 1
+		Adding candidate: HyperVertex 1 (ce16b77d-7237-42f3-b369-042f142d9699):  (source hyperedges: ) (destination hyperedges: a, b)
+		Comparing to candidate: HyperVertex 1 (ce16b77d-7237-42f3-b369-042f142d9699):  (source hyperedges: ) (destination hyperedges: a, b).
+			Checking if query node 1 is joinable to data node 1:
+				Looking at destination query edge: a
+				Looking at destination query edge: b
+			nextQueryVertex is joinable to data node candidate.
+subgraphSearch():
+	Selected nextQueryVertex: HyperVertex 3 (5bdcba50-8338-4de4-9ffa-80903daac2b3):  (source hyperedges: a) (destination hyperedges: b).
+	Filtering candidates for query node: 3
+		Adding candidate: HyperVertex 3 (f36808fe-8010-4ebe-8833-8b346b471374):  (source hyperedges: a, c) (destination hyperedges: b)
+		Comparing to candidate: HyperVertex 3 (f36808fe-8010-4ebe-8833-8b346b471374):  (source hyperedges: a, c) (destination hyperedges: b).
+			Checking if query node 3 is joinable to data node 3:
+				Looking at source query edge: a
+				Looking at destination query edge: b
+			nextQueryVertex is joinable to data node candidate.
+subgraphSearch():
+	Selected nextQueryVertex: HyperVertex 5 (1e7d71c5-b069-4d39-8a13-e7d50f078e54):  (source hyperedges: b) (destination hyperedges: ).
+	Filtering candidates for query node: 5
+		Adding candidate: HyperVertex 5 (f37de700-6b73-462e-8508-0a97e7bd106f):  (source hyperedges: b) (destination hyperedges: d)
+		Comparing to candidate: HyperVertex 5 (f37de700-6b73-462e-8508-0a97e7bd106f):  (source hyperedges: b) (destination hyperedges: d).
+			Checking if query node 5 is joinable to data node 5:
+				Looking at source query edge: b
+			nextQueryVertex is joinable to data node candidate.
+subgraphSearch():
+	All nodes have been matched. Returning true.
+findIsomorphism()
+	Filtering candidates for query node: 1
+		Adding candidate: HyperVertex 1 (ce16b77d-7237-42f3-b369-042f142d9699):  (source hyperedges: ) (destination hyperedges: a, b)
+	Filtering candidates for query node: 3
+		Adding candidate: HyperVertex 3 (f36808fe-8010-4ebe-8833-8b346b471374):  (source hyperedges: a, c) (destination hyperedges: b)
+	Filtering candidates for query node: 5
+		Adding candidate: HyperVertex 5 (f37de700-6b73-462e-8508-0a97e7bd106f):  (source hyperedges: b) (destination hyperedges: d)
+Found a candidate for each query vertex. Beginning subgraphSearch.
+subgraphSearch():
+	Selected nextQueryVertex: HyperVertex 1 (d5a464ce-ee25-401d-aec2-dfe94c0ff604):  (source hyperedges: ) (destination hyperedges: a, b).
+	Filtering candidates for query node: 1
+		Adding candidate: HyperVertex 1 (ce16b77d-7237-42f3-b369-042f142d9699):  (source hyperedges: ) (destination hyperedges: a, b)
+		Comparing to candidate: HyperVertex 1 (ce16b77d-7237-42f3-b369-042f142d9699):  (source hyperedges: ) (destination hyperedges: a, b).
+			Checking if query node 1 is joinable to data node 1:
+				Looking at destination query edge: a
+				Looking at destination query edge: b
+			nextQueryVertex is joinable to data node candidate.
+subgraphSearch():
+	Selected nextQueryVertex: HyperVertex 3 (3abf6e05-133f-4b04-a993-d33d330b2a81):  (source hyperedges: a) (destination hyperedges: b, x).
+	Filtering candidates for query node: 3
+		Adding candidate: HyperVertex 3 (f36808fe-8010-4ebe-8833-8b346b471374):  (source hyperedges: a, c) (destination hyperedges: b)
+		Comparing to candidate: HyperVertex 3 (f36808fe-8010-4ebe-8833-8b346b471374):  (source hyperedges: a, c) (destination hyperedges: b).
+			Checking if query node 3 is joinable to data node 3:
+				Looking at source query edge: a
+				Looking at destination query edge: b
+				Looking at destination query edge: x
+				Did not find an edge mapping for query destination edge: x
+			nextQueryVertex is not joinable to data node candidate.
+HyperGraph destructor called for object at 0x7ffea52f3e50
+HyperGraph destructor called for object at 0x7ffea52f3e20
+HyperGraph destructor called for object at 0x7ffea52f3df0
+
+Process finished with exit code 0
